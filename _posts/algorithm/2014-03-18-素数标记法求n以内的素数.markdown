@@ -1,0 +1,83 @@
+---
+layout: post
+title:  "素数标记法求n以内的素数"
+date:   2014-03-19 15:36:55
+categories: algorithm  
+---
+
+#算法描述
+记`bool[n+1]` `flag`用来记录`1-n`是否为素数。`flag[i]==true`表示i为素数。
+`int[n]`  `prime`用来记录宿数。
+初始化`flag`，全为`true`.
+从2到n,对于`flag[i]==true`的，计入`prime`,并且将所有`i`的倍数的`flag`值设为`false`;
+最后`prime`中为所有的素数。
+
+####证明：
+>假设在从小到大遍历`flag`时，遇到`flag[i]==true`,但是i不是素数，
+>那么一定存在`n`,`m` 使得`i=n*m ,n<i,m<i`且`n`为素数。
+>但是按照算法，`flag[n*m]`早已经设为`false`.
+>其中`flag`可用一个二进制位表示，压缩空间。
+####代码：
+{% highlight cpp %}
+/* 用素数表法求n以内的素数。 
+ *  
+ */  
+#include <cstring>  
+#include <cstdlib>  
+#include <iostream>  
+using namespace std;  
+//不用bitmap的方法  
+void simplePrime(int n)  
+{  
+	if(n<1)  
+		abort();  
+	bool flag[n+1];  
+	int prime[n];  
+	int index=0;  
+	memset(flag,true,sizeof(bool)*(n+1));  
+	for(int i=2;i<=n;i++)             //注意1不是素数，应从2开始，从1开始计算会放生错误。  
+	{  
+		if(flag[i])  
+		{  
+			prime[index++]=i;  
+			for(int j=2*i;j<=n;j+=i)  
+				flag[j]=false;  
+		}  
+	}  
+	for(int i=0;i<index;i++)  
+		cout<<prime[i]<<" ";  
+	cout<<endl;  
+}  
+
+//采用bitmap对flag进行压缩  
+void bitPrime(int n)  
+{  
+	if(n<1)  
+		abort();  
+	int flag[n/32+1];  
+	int prime[n];  
+	memset(flag,0,sizeof(int)*(n/32+1));  
+	int index=0;  
+	for(int i=2;i<=n;i++)  
+	{  
+		if((flag[i/32]&(1<<(i%32)))==0)  
+		{  
+			prime[index++]=i;  
+			for(int j=2*i;j<=n;j+=i)  
+				flag[j/32]|=(1<<(j%32));  
+		}  
+	}  
+	for(int i=0;i<index;i++)  
+		cout<<prime[i]<<" ";  
+	cout<<endl;  
+}  
+
+int main()  
+{  
+	simplePrime(100);  
+	bitPrime(100);  
+}  
+{% endhighlight %}
+
+
+

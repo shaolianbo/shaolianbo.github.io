@@ -1,0 +1,95 @@
+---
+layout: post
+title:  "最长回文算法"
+date:   2012-12-30 15:36:55
+categories: algorithm  
+---
+
+***kmp核心思想：计算模式串的next数组，主串的索引在比较的过程中不回朔。***
+
+kmp.h
+{% highlight cpp%}
+#ifndef KMP_H_  
+#define KMP_H_  
+class Kmp  
+{  
+	private:  
+		void getNext(char* pstr,int length,int* kmpnext);  
+	public:  
+		int calcu(char* pmain,char* pchild,int mainlength,int childlength);  
+};  
+#endif 
+{% endhighlight %}
+
+kmp.cpp
+{% highlight cpp %}
+#include "kmp.h"  
+#include <stdio.h>  
+#include <stdlib.h>  
+#include <iostream>  
+using namespace std;  
+int Kmp::calcu(char* pmain,char* pchild,int mainlength,int childlength)  
+	/* pmain----被比较串。 
+	 * pchild-----待比较串 
+	 * mainlength----pmain的长度 
+	 * childlength-----pchild的长度 
+	 */  
+{  
+	int* pnext=new int[childlength];  
+	getNext(pchild,childlength,pnext);           //获取pchild的next数组  
+	int i=0;//for main   
+	int j=0;//for child  
+	while((i<mainlength) && (j<childlength))  
+	{  
+		if((j==-1) || (pmain[i]==pchild[j]))    //next中的值为-1时，
+												//表示在pmain的当前位置无匹配  
+		{  
+			i++;  
+			j++;  
+		}  
+		else  
+			j=pnext[j];  
+	}     
+	delete[] pnext;  
+	if(j>=childlength)  
+		return i-childlength;  
+	else  
+		return -1;  
+}  
+
+void Kmp::getNext(char* pstr,int length,int* kmpnext)  
+	/*  pstr---------模式串 
+	 *  length-----串长度 
+	 *  kmpnext-----要输出的next数组，记录当模式串中对应位布匹配时，
+	 *  主串当前位再和模式串的那一未比较 
+	 *   
+	 */  
+{  
+	/*基本思路是：已知kmpnext[i]=j,如果kmp[i]=kmp[j]或kmp[i]=-1,则kmpnext[i+1]=j+1 
+	 *  如果kmp[i]!=kmp[j],则进行一个自身的模式匹配，知道满足上述情况。 
+	 */  
+	kmpnext[0]=-1;  
+	int j=-1;  // content of kmpnext   
+	int i=0;     //index of pstr  
+	while(i<(length-1))        //因为是已知第i位的next值，求i+1位的值，所以i最大为length-2  
+	{  
+		if((j==-1) || (pstr[j]==pstr[i]))   //kmp myself  
+		{  
+			kmpnext[++i]=++j;  
+		}  
+		else  
+			j=kmpnext[j];      
+	}  
+}  
+{% endhighlight %}
+
+###应用举例：
+
+>####1.求两个字串的最大公共子串：
+>
+>eg:s1=123abcd456 和s2=456abcd123
+>按s2后缀串由短到长，分别求每个后缀串与s1匹配时的最大匹配长度。最长匹配的那部分就是最大公共字串。
+>
+>####2.进一步扩展就是求s=123abccba34的最长回文。
+>
+>此问题等价于：s1=123abccba34 s2=34abccba321的最大公共子串。

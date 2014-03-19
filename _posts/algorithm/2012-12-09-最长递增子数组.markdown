@@ -1,0 +1,149 @@
+---
+layout: post
+title:  "求数组的最长递增子数组"
+date:   2012-12-09 15:36:55
+categories: algorithm  
+---
+###问题：求数组的最长递增子数组的长度。
+eg: 输入数组{1,-1,2,-3,4,-5,6,-7},因为最长递增子数组为
+1 2 4 6 ,所以返回4.
+
+###方法一：
+显然如果能穷举所有的递增子数组（不相包含），就可以得到最长的是什么。
+假设有一个递增子串的集合，遍历数组的过程中维护这个集合：
+索引   元素       子串集合
+0      1           1
+1      -1          1；-1
+2      2           1，2；-1，2
+3      -3          1，2；-1，2；-3
+4      4           1，2，4；-1，2，4；-3，4
+5      -5          1，2，4；-1，2，4；-3，4；-5
+6      6           1，2，4，6；-1，2，4，6；-3，4，6；-5，6
+7      -7          1，2，4，6；-1，2，4，6；-3，4，6；-5，6;-7
+
+输出4
+
+但问题只要求最长递增子串的长度，不必求字串的内容，可以简化：
+我们是这样构造子串的：
+当我们读到第三个数2时，只要求出以2结尾的串的最大长度就可以了。这样其后如果是比2大的数字，可在他的长度上递
+增，其后是比2小的数与这里的计算结果就不搭了。最后我们求出的是以各个位置的数字结尾的递增字串的对大长度。
+其中最大值即为输出。
+
+故得到解结构：
+输入pin,第i个数子结尾时，字串的最大长度
+longest[i]=max{1,longest[k]} 1<=k<i && pin[k]<pin[i]
+
+故有时间复杂度为O(n^2)的算法1：
+
+	int longestA(int* pin,int length)  
+	{  
+		int longest[length];  
+		longest[0]=1;  
+		int max=1;  
+		for(int i=1;i<length;i++)  
+		{  
+			longest[i]=1;  
+			for(int j=0;j<i;j++)  
+			{  
+				if(pin[j]<pin[i] && longest[j]+1>longest[i])  
+					longest[i]=longest[j]+1;  
+			}  
+			if(longest[i]>max)  
+				max=longest[i];  
+		}  
+		return max;  
+
+	}  
+
+###方法二：
+考虑对其方法一优化，求longset[i]时，遍历了之前所有的longsest结果。我门需要找到的是以小于pin[i]结尾的，长度最大
+长的字串。故可以记录这两个量的组合：子串长度---结尾数字，而相同的长度会有不同的尾数字，我门只在意最小的
+那个是否<pin[i],小则可以得到更长的子串。故该组合应为：子串长度----结尾数字的最小值。我们将所有组合按
+长度从小到大排列，长度最大且结尾数字<pin[i] 的。
+
+算法2时间复杂度仍O(n^2)
+
+	int longestB(int* pin,int length)  
+	{  
+		int minTail[length+1];  
+		minTail[1]=pin[0];  
+		int maxlengh=1;  
+		  
+		for(int i=1;i<length;i++)  
+		{  
+			int mylength=1;  
+			for(int j=maxlengh;j>=1;j--)  
+				 {  
+					 if(pin[i]>minTail[j])  
+						 {  
+							 mylength=j+1;  
+							 break;  
+						 }  
+				 }  
+			if(mylength>maxlengh)  
+			{  
+			   minTail[mylength]=pin[i];  
+			   maxlengh=mylength;  
+			}  
+			else  
+			{  
+				if(pin[i]<minTail[mylength])  
+					minTail[mylength]=pin[i];  
+			}  
+		}  
+		return maxlengh;  
+	}  
+
+###方法三：
+数组minTail[i]  ,表示长度为i的递增子串的最小尾数.
+实际上存在如下关系：
+如果i<j  那么minTail[i]<minTail[j]
+证明：
+  假设minTail[j]<=minTail[i],则长度j的串中长度为i的子串其尾数必然<minTail[i].这和数组minTail的定义矛盾。
+
+所以可以用二分查找实现在minTail中的查找：
+算法复杂读为O(nlongn)
+
+	//二分查找，找第一个比n小的。  
+	int halfSearch(int* pin,int nstart,int nend,int n)  
+	{  
+		int mid;  
+		int nlow=nstart;  
+		int nhigh=nend;  
+		while(nhigh>=nlow)                //只有当所有数都大于n时，条件不成立，返回1  
+		{  
+			mid=(nhigh+nlow)/2;  
+			if(pin[mid]<n && ( mid+1>nend||pin[mid+1]>=n))  
+				return mid;                    //只要有小于n的元素就从这里返回  
+			else  
+				if( pin[mid]>=n)  
+					  nhigh=mid-1;  
+				else  
+					nlow=mid+1;  
+		}  
+		return 0;  
+	}  
+	  
+	  
+	int longestC(int* pin,int length)  
+	{  
+		int minTail[length+1];  
+		minTail[1]=pin[0];  
+		int maxlengh=1;  
+		  
+		for(int i=1;i<length;i++)  
+		{  
+			int mylength=halfSearch(minTail,1,maxlengh,pin[i])+1;  
+			if(mylength>maxlengh)  
+			{  
+			   minTail[mylength]=pin[i];  
+			   maxlengh=mylength;  
+			}  
+			else  
+			{  
+				if(pin[i]<minTail[mylength])  
+					minTail[mylength]=pin[i];  
+			}  
+		}  
+		return maxlengh;  
+	}  

@@ -1,0 +1,73 @@
+---
+layout: post
+title:  "欧几里德法求最大公约数"
+date:   2014-02-02 15:36:55
+categories: algorithm  
+tag: ["algorithm"]
+---
+
+####求a和b的最大公约数
+记 `a mod b=c` ,即`a=kb+c` 
+设`a b`的最大公约数为`d`,则`a=m*d b=n*d`,m和n互质。
+`c=a-kb=md-knd=(m-kn)d`,m和n互质，则n和`m-kn`互质，`c`和`b`的最大公约数也是`d`
+所以： "_a和b(a>b)的最大公约数等于b和a Mode b的最大公约数_"，递归或迭代计算，直到余数为0，此时除数为最大公约数
+
+也可以这样理解：
+`a=m*d b=n*d`,m和n互质,`c=a-b=(m-n)*d`
+,`m-n 和 n`互质，
+即，"_a 、b（a>b）的最大公约数等于 b 和 a-b 的最大公约数_"递归或迭代计算，直到两数相等，此时的值为最大公约数。
+
+{% highlight cpp%}
+/*  欧几里得法 求最大公约数 
+ * 
+ */  
+#include <iostream>  
+#include <stdlib.h>  
+using namespace std;  
+//m>n  
+int gcd1(int m,int n)  
+{  
+	if(m<0)  
+		m=0-m;  
+	if(n<0)  
+		n=0-n;  
+	for(int c=m%n;c!=0;)  
+	{  
+		m=n;  
+		n=c;  
+		c=m%n;  
+	}  
+	return n;  
+}  
+// m>2  
+int gcd2(int m,int n)  
+{  
+	if(m<0)  
+		m=0-m;  
+	if(n<0)  
+		n=0-n;  
+	while(m!=n)  
+	{  
+		m=m-n;  
+		if(m<n)  
+		{  
+			int c=m;  
+			m=n;  
+			n=c;  
+		}  
+	}     
+	return m;  
+}  
+
+int main()  
+{  
+	for (int i=0; i<10;i++)  
+	{  
+		int n=rand()%10+1;  
+		int m=rand()%10+10+1;  
+		cout<<m<<" gcd1 "<<n<<"="<<gcd1(m,n)<<endl;  
+		cout<<m<<" gcd2 "<<n<<"="<<gcd2(m,n)<<endl;  
+
+	}     
+}  
+{% endhighlight %}

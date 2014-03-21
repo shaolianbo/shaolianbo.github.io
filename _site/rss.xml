@@ -1,0 +1,904 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+<channel>
+        <title>Seven</title>
+        <description>Seven - Jay shaolianbo</description>
+        <link>http://username.github.io</link>
+        <link>http://username.github.io</link>
+        <lastBuildDate>2014-03-20T18:59:37+08:00</lastBuildDate>
+        <pubDate>2014-03-20T18:59:37+08:00</pubDate>
+        <ttl>1800</ttl>
+
+
+        <item>
+                <title>字节对齐与sizeof</title>
+                <description>&lt;h3 id=&quot;siezeof&quot;&gt;一、siezeof&lt;/h3&gt;
+
+&lt;p&gt;&lt;code&gt;sizeof&lt;/code&gt; : 运算符，&lt;code&gt;sizeof(a)&lt;/code&gt;,在编译阶段用a占用的栈空间大小替换&lt;code&gt;sizeof(a)&lt;/code&gt;.&lt;/p&gt;
+
+&lt;h4 id=&quot;eg1&quot;&gt;eg1:&lt;/h4&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='k'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;test&lt;/span&gt;
+&lt;span class='p'&gt;{&lt;/span&gt;
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+	&lt;span class='k'&gt;static&lt;/span&gt; &lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+&lt;span class='p'&gt;}&lt;/span&gt;
+&lt;span class='k'&gt;sizeof&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;test&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;==&lt;/span&gt;&lt;span class='mi'&gt;4&lt;/span&gt;&lt;span class='o'&gt;!=&lt;/span&gt;&lt;span class='mi'&gt;8&lt;/span&gt; &lt;span class='err'&gt;#&lt;/span&gt; &lt;span class='err'&gt;因为&lt;/span&gt;&lt;span class='k'&gt;static&lt;/span&gt;&lt;span class='err'&gt;放在静态区而不是栈空间，所以&lt;/span&gt;&lt;span class='k'&gt;sizeof&lt;/span&gt; &lt;span class='err'&gt;不于计算。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&quot;eg2&quot;&gt;eg2:&lt;/h4&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;
+&lt;span class='k'&gt;sizeof&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;==&lt;/span&gt;&lt;span class='mi'&gt;4&lt;/span&gt;    &lt;span class='err'&gt;#&lt;/span&gt; &lt;span class='err'&gt;此句之后&lt;/span&gt;&lt;span class='n'&gt;a&lt;/span&gt;&lt;span class='err'&gt;的值还为&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='err'&gt;，因为&lt;/span&gt;&lt;span class='k'&gt;sizeof&lt;/span&gt; &lt;span class='err'&gt;只进行替换，不进行计算。&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h4 id=&quot;eg3&quot;&gt;eg3:&lt;/h4&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='nf'&gt;fun&lt;/span&gt;&lt;span class='p'&gt;(){&lt;/span&gt;&lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;;}&lt;/span&gt;
+&lt;span class='k'&gt;sizeof&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;fun&lt;/span&gt;&lt;span class='p'&gt;())&lt;/span&gt;&lt;span class='o'&gt;==&lt;/span&gt;&lt;span class='mi'&gt;4&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;&quot;&gt;二、字节对齐&lt;/h3&gt;
+
+&lt;p&gt;1.自然对齐 &lt;code&gt;#pagram pack()&lt;/code&gt;。 如果结构体成员的长度都小于机器处理器的位数，则按照最长的成员对齐。 如果最长的成员大于机器 处理器的位数，那么按照机器的位数对齐。还有一点，类型相同的连续元素将在连续的空间内，和数组一样。&lt;/p&gt;
+
+&lt;p&gt;2.强制对齐。&lt;code&gt;#pagram pack(4)&lt;/code&gt;。但是最大对齐为机器处理器位数。&lt;/p&gt;</description>
+                <link>http://username.github.io/c/2014/03/19/%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8Csizeof</link>
+                <guid>http://username.github.io/c/2014/03/19/字节对齐和sizeof</guid>
+                <pubDate>2014-03-19T17:55:00Z</pubDate>
+        </item>
+
+        <item>
+                <title>素数标记法求n以内的素数</title>
+                <description>&lt;h1 id=&quot;&quot;&gt;算法描述&lt;/h1&gt;
+
+&lt;p&gt;记&lt;code&gt;bool[n+1]&lt;/code&gt; &lt;code&gt;flag&lt;/code&gt;用来记录&lt;code&gt;1-n&lt;/code&gt;是否为素数。&lt;code&gt;flag[i]==true&lt;/code&gt;表示i为素数。 &lt;code&gt;int[n]&lt;/code&gt; &lt;code&gt;prime&lt;/code&gt;用来记录宿数。 初始化&lt;code&gt;flag&lt;/code&gt;，全为&lt;code&gt;true&lt;/code&gt;. 从2到n,对于&lt;code&gt;flag[i]==true&lt;/code&gt;的，计入&lt;code&gt;prime&lt;/code&gt;,并且将所有&lt;code&gt;i&lt;/code&gt;的倍数的&lt;code&gt;flag&lt;/code&gt;值设为&lt;code&gt;false&lt;/code&gt;; 最后&lt;code&gt;prime&lt;/code&gt;中为所有的素数。&lt;/p&gt;
+
+&lt;h4 id=&quot;_2&quot;&gt;证明：&lt;/h4&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;假设在从小到大遍历&lt;code&gt;flag&lt;/code&gt;时，遇到&lt;code&gt;flag[i]==true&lt;/code&gt;,但是i不是素数， 那么一定存在&lt;code&gt;n&lt;/code&gt;,&lt;code&gt;m&lt;/code&gt; 使得&lt;code&gt;i=n*m ,n&amp;lt;i,m&amp;lt;i&lt;/code&gt;且&lt;code&gt;n&lt;/code&gt;为素数。 但是按照算法，&lt;code&gt;flag[n*m]&lt;/code&gt;早已经设为&lt;code&gt;false&lt;/code&gt;. 其中&lt;code&gt;flag&lt;/code&gt;可用一个二进制位表示，压缩空间。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h4 id=&quot;_3&quot;&gt;代码：&lt;/h4&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='cm'&gt;/* 用素数表法求n以内的素数。 &lt;/span&gt;
+&lt;span class='cm'&gt; *  &lt;/span&gt;
+&lt;span class='cm'&gt; */&lt;/span&gt;  
+&lt;span class='cp'&gt;#include &amp;lt;cstring&amp;gt;  &lt;/span&gt;
+&lt;span class='cp'&gt;#include &amp;lt;cstdlib&amp;gt;  &lt;/span&gt;
+&lt;span class='cp'&gt;#include &amp;lt;iostream&amp;gt;  &lt;/span&gt;
+&lt;span class='k'&gt;using&lt;/span&gt; &lt;span class='k'&gt;namespace&lt;/span&gt; &lt;span class='n'&gt;std&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='c1'&gt;//不用bitmap的方法  &lt;/span&gt;
+&lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;simplePrime&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;abort&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;  
+	&lt;span class='kt'&gt;bool&lt;/span&gt; &lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;];&lt;/span&gt;  
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;prime&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;];&lt;/span&gt;  
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;index&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='n'&gt;memset&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='nb'&gt;true&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='k'&gt;sizeof&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;bool&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;));&lt;/span&gt;  
+	&lt;span class='k'&gt;for&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;=&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;             &lt;span class='c1'&gt;//注意1不是素数，应从2开始，从1开始计算会放生错误。  &lt;/span&gt;
+	&lt;span class='p'&gt;{&lt;/span&gt;  
+		&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;])&lt;/span&gt;  
+		&lt;span class='p'&gt;{&lt;/span&gt;  
+			&lt;span class='n'&gt;prime&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;index&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+			&lt;span class='k'&gt;for&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;=&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;+=&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+				&lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='nb'&gt;false&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='p'&gt;}&lt;/span&gt;  
+	&lt;span class='p'&gt;}&lt;/span&gt;  
+	&lt;span class='k'&gt;for&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;index&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;cout&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;prime&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='s'&gt;&amp;quot; &amp;quot;&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='n'&gt;cout&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;endl&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='p'&gt;}&lt;/span&gt;  
+
+&lt;span class='c1'&gt;//采用bitmap对flag进行压缩  &lt;/span&gt;
+&lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='nf'&gt;bitPrime&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;abort&lt;/span&gt;&lt;span class='p'&gt;();&lt;/span&gt;  
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='mi'&gt;32&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;];&lt;/span&gt;  
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;prime&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;];&lt;/span&gt;  
+	&lt;span class='n'&gt;memset&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='k'&gt;sizeof&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='mi'&gt;32&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;));&lt;/span&gt;  
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;index&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='k'&gt;for&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;=&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+	&lt;span class='p'&gt;{&lt;/span&gt;  
+		&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='mi'&gt;32&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;&amp;amp;&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;%&lt;/span&gt;&lt;span class='mi'&gt;32&lt;/span&gt;&lt;span class='p'&gt;)))&lt;/span&gt;&lt;span class='o'&gt;==&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='p'&gt;{&lt;/span&gt;  
+			&lt;span class='n'&gt;prime&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;index&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+			&lt;span class='k'&gt;for&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;2&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;=&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;+=&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+				&lt;span class='n'&gt;flag&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;/&lt;/span&gt;&lt;span class='mi'&gt;32&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;|=&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;%&lt;/span&gt;&lt;span class='mi'&gt;32&lt;/span&gt;&lt;span class='p'&gt;));&lt;/span&gt;  
+		&lt;span class='p'&gt;}&lt;/span&gt;  
+	&lt;span class='p'&gt;}&lt;/span&gt;  
+	&lt;span class='k'&gt;for&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;index&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;cout&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;prime&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='s'&gt;&amp;quot; &amp;quot;&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='n'&gt;cout&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;endl&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='p'&gt;}&lt;/span&gt;  
+
+&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='nf'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='n'&gt;simplePrime&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;100&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;  
+	&lt;span class='n'&gt;bitPrime&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='mi'&gt;100&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;  
+&lt;span class='p'&gt;}&lt;/span&gt;  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+                <link>http://username.github.io/algorithm/2014/03/19/%E7%B4%A0%E6%95%B0%E6%A0%87%E8%AE%B0%E6%B3%95%E6%B1%82n%E4%BB%A5%E5%86%85%E7%9A%84%E7%B4%A0%E6%95%B0</link>
+                <guid>http://username.github.io/algorithm/2014/03/19/素数标记法求n以内的素数</guid>
+                <pubDate>2014-03-19T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>欧几里德法求最大公约数</title>
+                <description>&lt;h4 id=&quot;ab&quot;&gt;求a和b的最大公约数&lt;/h4&gt;
+
+&lt;p&gt;记 &lt;code&gt;a mod b=c&lt;/code&gt; ,即&lt;code&gt;a=kb+c&lt;/code&gt; 设&lt;code&gt;a b&lt;/code&gt;的最大公约数为&lt;code&gt;d&lt;/code&gt;,则&lt;code&gt;a=m*d b=n*d&lt;/code&gt;,m和n互质。 &lt;code&gt;c=a-kb=md-knd=(m-kn)d&lt;/code&gt;,m和n互质，则n和&lt;code&gt;m-kn&lt;/code&gt;互质，&lt;code&gt;c&lt;/code&gt;和&lt;code&gt;b&lt;/code&gt;的最大公约数也是&lt;code&gt;d&lt;/code&gt; 所以： “_a和b(a&amp;gt;b)的最大公约数等于b和a Mode b的最大公约数_”，递归或迭代计算，直到余数为0，此时除数为最大公约数&lt;/p&gt;
+
+&lt;p&gt;也可以这样理解： &lt;code&gt;a=m*d b=n*d&lt;/code&gt;,m和n互质,&lt;code&gt;c=a-b=(m-n)*d&lt;/code&gt; ,&lt;code&gt;m-n 和 n&lt;/code&gt;互质， 即，”_a 、b（a&amp;gt;b）的最大公约数等于 b 和 a-b 的最大公约数_”递归或迭代计算，直到两数相等，此时的值为最大公约数。&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='cm'&gt;/*  欧几里得法 求最大公约数 &lt;/span&gt;
+&lt;span class='cm'&gt; * &lt;/span&gt;
+&lt;span class='cm'&gt; */&lt;/span&gt;  
+&lt;span class='cp'&gt;#include &amp;lt;iostream&amp;gt;  &lt;/span&gt;
+&lt;span class='cp'&gt;#include &amp;lt;stdlib.h&amp;gt;  &lt;/span&gt;
+&lt;span class='k'&gt;using&lt;/span&gt; &lt;span class='k'&gt;namespace&lt;/span&gt; &lt;span class='n'&gt;std&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='c1'&gt;//m&amp;gt;n  &lt;/span&gt;
+&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='nf'&gt;gcd1&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='k'&gt;for&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;c&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;%&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;c&lt;/span&gt;&lt;span class='o'&gt;!=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;)&lt;/span&gt;  
+	&lt;span class='p'&gt;{&lt;/span&gt;  
+		&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;c&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='n'&gt;c&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;%&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='p'&gt;}&lt;/span&gt;  
+	&lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='p'&gt;}&lt;/span&gt;  
+&lt;span class='c1'&gt;// m&amp;gt;2  &lt;/span&gt;
+&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='nf'&gt;gcd2&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='k'&gt;while&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;!=&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+	&lt;span class='p'&gt;{&lt;/span&gt;  
+		&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='p'&gt;{&lt;/span&gt;  
+			&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;c&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+			&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+			&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;c&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='p'&gt;}&lt;/span&gt;  
+	&lt;span class='p'&gt;}&lt;/span&gt;     
+	&lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='p'&gt;}&lt;/span&gt;  
+
+&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='nf'&gt;main&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='k'&gt;for&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+	&lt;span class='p'&gt;{&lt;/span&gt;  
+		&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;rand&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;&lt;span class='o'&gt;%&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;rand&lt;/span&gt;&lt;span class='p'&gt;()&lt;/span&gt;&lt;span class='o'&gt;%&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='mi'&gt;10&lt;/span&gt;&lt;span class='o'&gt;+&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='n'&gt;cout&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='s'&gt;&amp;quot; gcd1 &amp;quot;&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;=&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;gcd1&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;endl&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='n'&gt;cout&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='s'&gt;&amp;quot; gcd2 &amp;quot;&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='s'&gt;&amp;quot;=&amp;quot;&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;gcd2&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;m&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='n'&gt;n&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;endl&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+
+	&lt;span class='p'&gt;}&lt;/span&gt;     
+&lt;span class='p'&gt;}&lt;/span&gt;  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;</description>
+                <link>http://username.github.io/algorithm/2014/02/02/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E6%B3%95%E6%B1%82%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0</link>
+                <guid>http://username.github.io/algorithm/2014/02/02/欧几里德法求最大公约数</guid>
+                <pubDate>2014-02-02T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>Trie</title>
+                <description>&lt;pre&gt;&lt;code&gt;class Trie:
+	&amp;quot;&amp;quot;&amp;quot;用来存储关键词和进行多模匹配  &amp;quot;&amp;quot;&amp;quot;
+		def __init__(self):
+			self.nodetype=0
+			self.child={}
+			self.fail=None
+			self.strout=&amp;quot;&amp;quot;
+			self.tag=0
+
+		def add(self,word):
+			&amp;quot;&amp;quot;&amp;quot; 添加关键词word, word--unicode码 &amp;quot;&amp;quot;&amp;quot;
+			node=self
+			for  w in word:
+				print w
+				if w not in node.child:
+					node.child[w]=Trie()
+				node=node.child[w]
+			node.nodetype=1
+			node.strout=word
+			self.tag=0
+
+		def find(self,word):
+			&amp;quot;&amp;quot;&amp;quot; 在trie树中搜索关键词, word---unicode码&amp;quot;&amp;quot;&amp;quot;
+			node=self
+			for w in word:
+				if w not in node.child:
+					return False
+				node=node.child[w]
+			if node.nodetype==1:
+				return True
+			else:
+				return False
+
+		def getfail(self):
+			&amp;quot;&amp;quot;&amp;quot;计算每个节点的失败跳转节点&amp;quot;&amp;quot;&amp;quot;
+			if self.tag:
+				return
+			que=[]
+			self.fail=self
+			que.append(self)
+			while len(que):
+				 par=que[0]
+				 del que[0]
+				 for w,ch in par.child.items():
+				 while par.fail is not self and (w not in par.fail.child):
+					  par=par.fail
+				 if par.fail is self and ((w not in self.child) or self.child[w] is ch):
+					  ch.fail=self
+				 else:
+					  ch.fail=par.fail.child[w]
+				que.append(ch)
+			self.tag=1
+
+		 def parse(self,lang):
+			&amp;quot;&amp;quot;&amp;quot; 对lang进行多模匹配,返回‘(匹配位置,keyword)’的列表，lang---unicode码&amp;quot;&amp;quot;&amp;quot;
+			 if self.tag==0:
+				self.getfail()
+			 result=[]
+			 node=self
+			 i=0
+			 n=len(lang)
+			 while i&amp;lt;n:
+				 if lang[i] in node.child:
+					 node=node.child[lang[i]]
+					 if node.nodetype==1:
+						  result.append((i-len(node.strout)+1,node.strout))
+					 i+=1
+				 else:
+					 if node is self:
+						i+=1
+					 else:
+						node=node.fail
+			 return result&lt;/code&gt;&lt;/pre&gt;</description>
+                <link>http://username.github.io/2013/01/30/trie</link>
+                <guid>http://username.github.io/2013/01/30/trie</guid>
+                <pubDate>2013-01-30T00:00:00+08:00</pubDate>
+        </item>
+
+        <item>
+                <title>最长回文算法</title>
+                <description>&lt;h3 id=&quot;1&quot;&gt;1.直接比较法。&lt;/h3&gt;
+
+&lt;p&gt;假设当前位置为回文的中点，比较两侧的相等字符个数。 eg:s1=”123abccba45”,首先变为”1#2#3#a#b#c#c#b#a#4#5#” 这样做的原因是使算法更简练：假设字符c是回文中点，但有两种情况，回文是奇数长度和偶数长度。 将字符串扩展后，偶数长回文都是在#处分析。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int  huiwen(char* input,int length,char* output)  
+{  
+	if((input==0)||(length&amp;lt;1))  
+		exit(1);  
+	char* new_input=new char[2*length];  
+	for(int i=0;i&amp;lt;length;i++)  
+	{  
+		new_input[2*i]=input[i];  
+		new_input[2*i+1]='#';  
+	}  
+	int start=0;  
+	int size=1;  
+	int index=1;  
+	int new_length=2*length;  
+	for(;index&amp;lt;new_length;index++)  
+	{  
+		int n=1;  
+		while((index-n)&amp;gt;=0 &amp;amp;&amp;amp; (index+n)&amp;lt;new_length &amp;amp;&amp;amp;   
+				new_input[index-n]==new_input[index+n])  
+			n++;  
+		if((n-1)&amp;gt;size)  
+		{  
+			if(index%2==0)  
+				start=index/2-(n-1)/2;  
+			else  
+				start=(index-n+2)/2;  
+			size=n-1;  
+		}     
+	}  
+	delete[] new_input;  
+	memmove(output,input+start,size);  
+	output[size]=0;  
+	return size;  
+}  &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;2&quot;&gt;2.动态规划&lt;/h3&gt;
+
+&lt;p&gt;这里动态规划的思路是 dp[i][j] 表示的是 从i 到 j 的字串，是否是回文串。 则根据回文的规则我们可以知道： 如果s[i] == s[j] 那么是否是回文决定于 dp[i+1][ j - 1] 当 s[i] != s[j] 的时候， dp[i][j] 直接就是 false。 动态规划的进行是按照字符串的长度从1 到 n推进的。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int huiwen2(char* pstr,int length,char* pout)  
+{  
+	if(!pstr || length&amp;lt;1 || !pout)  
+		abort();  
+	bool** bre=new bool*[length];  
+	for(int m=0;m&amp;lt;length;m++)  
+		bre[m]=new bool[length];  
+	for(int i=0;i&amp;lt;length;i++)  
+	{  
+		bre[i][i]=true;  
+	}  
+	int max=1;  
+	int max_index=0;  
+	for(int n=2;n&amp;lt;=length;n++)  
+	{  
+		for(int j=0;j&amp;lt;=(length-n);j++)  
+		{  
+			if((pstr[j]==pstr[j+n-1]) &amp;amp;&amp;amp; (bre[j+1][(n==2)?(j+1):(j+n-2)]))  
+			{  
+				bre[j][j+n-1]=true;  
+				max=n;  
+				max_index=j;  
+			}  
+			else  
+				bre[j][j+n-1]=false;  
+		}  
+	}  
+	for(int m=0;m&amp;lt;length;m++)  
+		delete[] bre[m];  
+	delete[] bre;  
+	for(int k=0;k&amp;lt;max;k++)  
+		pout[k]=pstr[max_index+k];  
+	pout[max]='\0';  
+	return max;  
+}  &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;3kmp&quot;&gt;3.kmp算法：&lt;/h3&gt;
+
+&lt;p&gt;对于串S, 假设它的 Reverse是 S’, 那么S的最长回文串是 S 和 S’ 的最长公共字串。&lt;/p&gt;
+
+&lt;p&gt;例如 S = abcddca, S’ = acddcba， S和S’的最长公共字串是 cddc 也是S的最长回文字串。&lt;/p&gt;
+
+&lt;p&gt;如果S‘是 模式串，我们可以对S’的所有后缀枚举(S0, S1, S2, Sn) 然后用每个后缀和S匹配，寻找最长的匹配前缀。&lt;/p&gt;
+
+&lt;p&gt;例如当前枚举是 S0 = acddcba 最长匹配前缀是 a&lt;/p&gt;
+
+&lt;p&gt;S1 = cddcba 最长匹配前缀是 cddc&lt;/p&gt;
+
+&lt;p&gt;S2 = ddcba 最长匹配前缀是 ddc&lt;/p&gt;</description>
+                <link>http://username.github.io/algorithm/2012/12/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E7%AE%97%E6%B3%95</link>
+                <guid>http://username.github.io/algorithm/2012/12/30/最长回文算法</guid>
+                <pubDate>2012-12-30T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>KMP字符串匹配算法</title>
+                <description>&lt;p&gt;&lt;strong&gt;&lt;em&gt;kmp核心思想：计算模式串的next数组，主串的索引在比较的过程中不回朔。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;kmp.h&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='cp'&gt;#ifndef KMP_H_  &lt;/span&gt;
+&lt;span class='cp'&gt;#define KMP_H_  &lt;/span&gt;
+&lt;span class='k'&gt;class&lt;/span&gt; &lt;span class='nc'&gt;Kmp&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='k'&gt;private&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;  
+		&lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='n'&gt;getNext&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;pstr&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;length&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;kmpnext&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;  
+	&lt;span class='k'&gt;public&lt;/span&gt;&lt;span class='o'&gt;:&lt;/span&gt;  
+		&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;calcu&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;pmain&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;pchild&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;mainlength&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;childlength&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;  
+&lt;span class='p'&gt;};&lt;/span&gt;  
+&lt;span class='cp'&gt;#endif &lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;p&gt;kmp.cpp&lt;/p&gt;
+&lt;div class='highlight'&gt;&lt;pre&gt;&lt;code class='cpp'&gt;&lt;span class='cp'&gt;#include &amp;quot;kmp.h&amp;quot;  &lt;/span&gt;
+&lt;span class='cp'&gt;#include &amp;lt;stdio.h&amp;gt;  &lt;/span&gt;
+&lt;span class='cp'&gt;#include &amp;lt;stdlib.h&amp;gt;  &lt;/span&gt;
+&lt;span class='cp'&gt;#include &amp;lt;iostream&amp;gt;  &lt;/span&gt;
+&lt;span class='k'&gt;using&lt;/span&gt; &lt;span class='k'&gt;namespace&lt;/span&gt; &lt;span class='n'&gt;std&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;Kmp&lt;/span&gt;&lt;span class='o'&gt;::&lt;/span&gt;&lt;span class='n'&gt;calcu&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;pmain&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;pchild&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;mainlength&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;childlength&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+	&lt;span class='cm'&gt;/* pmain----被比较串。 &lt;/span&gt;
+&lt;span class='cm'&gt;	 * pchild-----待比较串 &lt;/span&gt;
+&lt;span class='cm'&gt;	 * mainlength----pmain的长度 &lt;/span&gt;
+&lt;span class='cm'&gt;	 * childlength-----pchild的长度 &lt;/span&gt;
+&lt;span class='cm'&gt;	 */&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='kt'&gt;int&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;pnext&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='k'&gt;new&lt;/span&gt; &lt;span class='kt'&gt;int&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;childlength&lt;/span&gt;&lt;span class='p'&gt;];&lt;/span&gt;  
+	&lt;span class='n'&gt;getNext&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;pchild&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='n'&gt;childlength&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='n'&gt;pnext&lt;/span&gt;&lt;span class='p'&gt;);&lt;/span&gt;           &lt;span class='c1'&gt;//获取pchild的next数组  &lt;/span&gt;
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='c1'&gt;//for main   &lt;/span&gt;
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;&lt;span class='c1'&gt;//for child  &lt;/span&gt;
+	&lt;span class='k'&gt;while&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;mainlength&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='o'&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='n'&gt;childlength&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;  
+	&lt;span class='p'&gt;{&lt;/span&gt;  
+		&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;==-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='o'&gt;||&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;pmain&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;==&lt;/span&gt;&lt;span class='n'&gt;pchild&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='p'&gt;]))&lt;/span&gt;    &lt;span class='c1'&gt;//next中的值为-1时，&lt;/span&gt;
+												&lt;span class='c1'&gt;//表示在pmain的当前位置无匹配  &lt;/span&gt;
+		&lt;span class='p'&gt;{&lt;/span&gt;  
+			&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+			&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='p'&gt;}&lt;/span&gt;  
+		&lt;span class='k'&gt;else&lt;/span&gt;  
+			&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;pnext&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='p'&gt;];&lt;/span&gt;  
+	&lt;span class='p'&gt;}&lt;/span&gt;     
+	&lt;span class='k'&gt;delete&lt;/span&gt;&lt;span class='p'&gt;[]&lt;/span&gt; &lt;span class='n'&gt;pnext&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;&amp;gt;=&lt;/span&gt;&lt;span class='n'&gt;childlength&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+		&lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='n'&gt;childlength&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='k'&gt;else&lt;/span&gt;  
+		&lt;span class='k'&gt;return&lt;/span&gt; &lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+&lt;span class='p'&gt;}&lt;/span&gt;  
+
+&lt;span class='kt'&gt;void&lt;/span&gt; &lt;span class='n'&gt;Kmp&lt;/span&gt;&lt;span class='o'&gt;::&lt;/span&gt;&lt;span class='n'&gt;getNext&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='kt'&gt;char&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;pstr&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;length&lt;/span&gt;&lt;span class='p'&gt;,&lt;/span&gt;&lt;span class='kt'&gt;int&lt;/span&gt;&lt;span class='o'&gt;*&lt;/span&gt; &lt;span class='n'&gt;kmpnext&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt;  
+	&lt;span class='cm'&gt;/*  pstr---------模式串 &lt;/span&gt;
+&lt;span class='cm'&gt;	 *  length-----串长度 &lt;/span&gt;
+&lt;span class='cm'&gt;	 *  kmpnext-----要输出的next数组，记录当模式串中对应位布匹配时，&lt;/span&gt;
+&lt;span class='cm'&gt;	 *  主串当前位再和模式串的那一未比较 &lt;/span&gt;
+&lt;span class='cm'&gt;	 *   &lt;/span&gt;
+&lt;span class='cm'&gt;	 */&lt;/span&gt;  
+&lt;span class='p'&gt;{&lt;/span&gt;  
+	&lt;span class='cm'&gt;/*基本思路是：已知kmpnext[i]=j,如果kmp[i]=kmp[j]或kmp[i]=-1,则kmpnext[i+1]=j+1 &lt;/span&gt;
+&lt;span class='cm'&gt;	 *  如果kmp[i]!=kmp[j],则进行一个自身的模式匹配，知道满足上述情况。 &lt;/span&gt;
+&lt;span class='cm'&gt;	 */&lt;/span&gt;  
+	&lt;span class='n'&gt;kmpnext&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;=-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;=-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  &lt;span class='c1'&gt;// content of kmpnext   &lt;/span&gt;
+	&lt;span class='kt'&gt;int&lt;/span&gt; &lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='mi'&gt;0&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;     &lt;span class='c1'&gt;//index of pstr  &lt;/span&gt;
+	&lt;span class='k'&gt;while&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='o'&gt;&amp;lt;&lt;/span&gt;&lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;length&lt;/span&gt;&lt;span class='o'&gt;-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;))&lt;/span&gt;        &lt;span class='c1'&gt;//因为是已知第i位的next值，求i+1位的值，所以i最大为length-2  &lt;/span&gt;
+	&lt;span class='p'&gt;{&lt;/span&gt;  
+		&lt;span class='k'&gt;if&lt;/span&gt;&lt;span class='p'&gt;((&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;==-&lt;/span&gt;&lt;span class='mi'&gt;1&lt;/span&gt;&lt;span class='p'&gt;)&lt;/span&gt; &lt;span class='o'&gt;||&lt;/span&gt; &lt;span class='p'&gt;(&lt;/span&gt;&lt;span class='n'&gt;pstr&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;==&lt;/span&gt;&lt;span class='n'&gt;pstr&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;]))&lt;/span&gt;   &lt;span class='c1'&gt;//kmp myself  &lt;/span&gt;
+		&lt;span class='p'&gt;{&lt;/span&gt;  
+			&lt;span class='n'&gt;kmpnext&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='o'&gt;++&lt;/span&gt;&lt;span class='n'&gt;i&lt;/span&gt;&lt;span class='p'&gt;]&lt;/span&gt;&lt;span class='o'&gt;=++&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='p'&gt;;&lt;/span&gt;  
+		&lt;span class='p'&gt;}&lt;/span&gt;  
+		&lt;span class='k'&gt;else&lt;/span&gt;  
+			&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='o'&gt;=&lt;/span&gt;&lt;span class='n'&gt;kmpnext&lt;/span&gt;&lt;span class='p'&gt;[&lt;/span&gt;&lt;span class='n'&gt;j&lt;/span&gt;&lt;span class='p'&gt;];&lt;/span&gt;      
+	&lt;span class='p'&gt;}&lt;/span&gt;  
+&lt;span class='p'&gt;}&lt;/span&gt;  
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;h3 id=&quot;&quot;&gt;应用举例：&lt;/h3&gt;
+
+&lt;blockquote&gt;
+&lt;h4 id=&quot;1&quot;&gt;1.求两个字串的最大公共子串：&lt;/h4&gt;
+
+&lt;p&gt;eg:s1=123abcd456 和s2=456abcd123 按s2后缀串由短到长，分别求每个后缀串与s1匹配时的最大匹配长度。最长匹配的那部分就是最大公共字串。&lt;/p&gt;
+
+&lt;h4 id=&quot;2s123abccba34&quot;&gt;2.进一步扩展就是求s=123abccba34的最长回文。&lt;/h4&gt;
+
+&lt;p&gt;此问题等价于：s1=123abccba34 s2=34abccba321的最大公共子串。&lt;/p&gt;
+&lt;/blockquote&gt;</description>
+                <link>http://username.github.io/algorithm/2012/12/30/KMP%E5%AD%97%E4%B8%B2%E5%8C%B9%E9%85%8D%E7%AE%97%E6%B3%95</link>
+                <guid>http://username.github.io/algorithm/2012/12/30/KMP字串匹配算法</guid>
+                <pubDate>2012-12-30T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>求数组的前k小的元素，及其应用</title>
+                <description>&lt;h3 id=&quot;nmk&quot;&gt;问题：n元数组，问是否有和小于m的k元子数组&lt;/h3&gt;
+
+&lt;p&gt;比如数组{5,4,3,2,1},有和小于10的3元子数组。&lt;/p&gt;
+
+&lt;h3 id=&quot;&quot;&gt;方法一：&lt;/h3&gt;
+
+&lt;p&gt;枚举所有k元子数组。 采用回朔递归的方法。时间复杂度为N^2 显然这种方法没有挖掘任何题目的条件。&lt;/p&gt;
+
+&lt;h3 id=&quot;_2&quot;&gt;方法二：&lt;/h3&gt;
+
+&lt;p&gt;是否有和小于m的子数组，只有知道和最小的子数组的和是否小于 m即可。（同样，如果问是否有和大于m的k元子数组，只需要求 和最大的子数组是否和大于m）. 故可以先给数组排序，再求前k个数的和，与m比较。 快排：O(nlogn)&lt;/p&gt;
+
+&lt;h3 id=&quot;_3&quot;&gt;方法三：&lt;/h3&gt;
+
+&lt;p&gt;不必对整个数组排序。 我们只需知道前k小的数字是什么。再求和即可。 这一点可用改进的快排实现。 算法复杂度： n+n/2+n/4+n/8+…+1 化简后为O（n）&lt;/p&gt;
+
+&lt;h3 id=&quot;_4&quot;&gt;源码：&lt;/h3&gt;
+
+&lt;pre&gt;&lt;code&gt;/*  问题：n元数组，问是否有和小于m的k元子数组 
+ * 
+ */  
+#include &amp;lt;algorithm&amp;gt;  
+#include &amp;lt;iostream&amp;gt;  
+#include &amp;lt;numeric&amp;gt;  
+using namespace std;  
+//利用快排求数组第k小的元素。（这种方法，使得该第k小元素的前面的元素是第1-k小的）  
+//找出前k小的所有元素。  
+int partK(int nstart,int nend,int k,int* array)  
+	/*  开始索引nstart,结束索引nend,查找array中的第k大的数。 
+	 * 
+	 */  
+{  
+	if( !array || nstart&amp;gt;nend )  
+		abort();  
+	if(nstart==nend)        //说明搜索范围已经最小，已经中找到。  
+	{  
+		if((k-1)==nstart)  
+			return array[nstart];  
+		else  
+			abort();  
+	}  
+	int t=random()%(nend-nstart+1)+nstart;  
+	int tempt=array[t];  
+	array[t]=array[nend];  
+	array[nend]=tempt;  
+	int i=nstart-1;  
+	for(int j=nstart;j&amp;lt;nend;j++)  
+	{  
+		if(array[j]&amp;lt;array[nend])  
+		{  
+			tempt=array[j];  
+			array[j]=array[i+1];  
+			array[++i]=tempt;  
+		}  
+	}  
+	tempt=array[++i];  
+	array[i]=array[nend];  
+	array[nend]=tempt;  
+	if(i==(k-1))  
+		return array[i];  
+	if(i&amp;lt;(k-1))  
+		return partK(i+1,nend,k,array);  
+	else  
+		return partK(nstart,i-1,k,array);  
+}  
+
+bool  findKlist(int* array,int length,int k,int m)  
+{  
+	partK(0,length-1,k,array);  
+	int total=accumulate(array,array+k,0);  
+	if(total&amp;lt;m)  
+		return true;  
+	else  
+		return false;  
+}  
+
+
+
+int main()  
+{  
+	int p[]={5,4,3,2,1};  
+	cout&amp;lt;&amp;lt;findKlist(p,5,3,10)&amp;lt;&amp;lt;endl;  
+	cout&amp;lt;&amp;lt;findKlist(p,5,3,6)&amp;lt;&amp;lt;endl;  
+
+}  &lt;/code&gt;&lt;/pre&gt;</description>
+                <link>http://username.github.io/algorithm/2012/12/10/%E6%B1%82%E6%95%B0%E7%BB%84%E5%89%8Dk%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8</link>
+                <guid>http://username.github.io/algorithm/2012/12/10/求数组前k小的元素及其应用</guid>
+                <pubDate>2012-12-10T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>求数组的最长递增子数组</title>
+                <description>&lt;h3 id=&quot;&quot;&gt;问题：求数组的最长递增子数组的长度。&lt;/h3&gt;
+
+&lt;p&gt;eg: 输入数组{1,-1,2,-3,4,-5,6,-7},因为最长递增子数组为 1 2 4 6 ,所以返回4.&lt;/p&gt;
+
+&lt;h3 id=&quot;_2&quot;&gt;方法一：&lt;/h3&gt;
+
+&lt;p&gt;显然如果能穷举所有的递增子数组（不相包含），就可以得到最长的是什么。 假设有一个递增子串的集合，遍历数组的过程中维护这个集合：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;索引   元素       子串集合
+0      1           1
+
+1      -1          1；-1
+
+2      2           1，2；-1，2
+
+3      -3          1，2；-1，2；-3
+
+4      4           1，2，4；-1，2，4；-3，4
+
+5      -5          1，2，4；-1，2，4；-3，4；-5
+
+6      6           1，2，4，6；-1，2，4，6；-3，4，6；-5，6
+
+7      -7          1，2，4，6；-1，2，4，6；-3，4，6；-5，6;-7&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;输出4&lt;/p&gt;
+
+&lt;p&gt;但问题只要求最长递增子串的长度，不必求字串的内容，可以简化： 我们是这样构造子串的： 当我们读到第三个数2时，只要求出以2结尾的串的最大长度就可以了。这样其后如果是比2大的数字，可在他的长度上递 增，其后是比2小的数与这里的计算结果就不搭了。最后我们求出的是以各个位置的数字结尾的递增字串的对大长度。 其中最大值即为输出。&lt;/p&gt;
+
+&lt;p&gt;故得到解结构： 输入pin,第i个数子结尾时，字串的最大长度 &lt;code&gt;longest[i]=max{1,longest[k]} 1&amp;lt;=k&amp;lt;i &amp;amp;&amp;amp; pin[k]&amp;lt;pin[i]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;故有时间复杂度为O(n^2)的算法1：&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int longestA(int* pin,int length)  
+{  
+	int longest[length];  
+	longest[0]=1;  
+	int max=1;  
+	for(int i=1;i&amp;lt;length;i++)  
+	{  
+		longest[i]=1;  
+		for(int j=0;j&amp;lt;i;j++)  
+		{  
+			if(pin[j]&amp;lt;pin[i] &amp;amp;&amp;amp; longest[j]+1&amp;gt;longest[i])  
+				longest[i]=longest[j]+1;  
+		}  
+		if(longest[i]&amp;gt;max)  
+			max=longest[i];  
+	}  
+	return max;  
+
+}  &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;_3&quot;&gt;方法二：&lt;/h3&gt;
+
+&lt;p&gt;考虑对其方法一优化，求longset[i]时，遍历了之前所有的longsest结果。我门需要找到的是以小于pin[i]结尾的，长度最大 长的字串。故可以记录这两个量的组合：子串长度—结尾数字，而相同的长度会有不同的尾数字，我门只在意最小的 那个是否&lt;code&gt;&amp;lt;pin[i]&lt;/code&gt;,小则可以得到更长的子串。故该组合应为：子串长度—-结尾数字的最小值。我们将所有组合按 长度从小到大排列，长度最大且结尾数字&lt;code&gt;&amp;lt;pin[i]&lt;/code&gt; 的。&lt;/p&gt;
+
+&lt;p&gt;算法2时间复杂度仍O(n^2)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int longestB(int* pin,int length)  
+{  
+	int minTail[length+1];  
+	minTail[1]=pin[0];  
+	int maxlengh=1;  
+	  
+	for(int i=1;i&amp;lt;length;i++)  
+	{  
+		int mylength=1;  
+		for(int j=maxlengh;j&amp;gt;=1;j--)  
+			 {  
+				 if(pin[i]&amp;gt;minTail[j])  
+					 {  
+						 mylength=j+1;  
+						 break;  
+					 }  
+			 }  
+		if(mylength&amp;gt;maxlengh)  
+		{  
+		   minTail[mylength]=pin[i];  
+		   maxlengh=mylength;  
+		}  
+		else  
+		{  
+			if(pin[i]&amp;lt;minTail[mylength])  
+				minTail[mylength]=pin[i];  
+		}  
+	}  
+	return maxlengh;  
+}  &lt;/code&gt;&lt;/pre&gt;
+
+&lt;h3 id=&quot;_4&quot;&gt;方法三：&lt;/h3&gt;
+
+&lt;p&gt;数组minTail[i] ,表示长度为i的递增子串的最小尾数. 实际上存在如下关系： 如果&lt;code&gt;i&amp;lt;j&lt;/code&gt; 那么&lt;code&gt;minTail[i]&amp;lt;minTail[j]&lt;/code&gt; 证明： 假设&lt;code&gt;minTail[j]&amp;lt;=minTail[i]&lt;/code&gt;,则长度j的串中长度为i的子串其尾数必然&lt;code&gt;&amp;lt;minTail[i]&lt;/code&gt;.这和数组minTail的定义矛盾。&lt;/p&gt;
+
+&lt;p&gt;所以可以用二分查找实现在minTail中的查找： 算法复杂读为O(nlongn)&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;//二分查找，找第一个比n小的。  
+int halfSearch(int* pin,int nstart,int nend,int n)  
+{  
+	int mid;  
+	int nlow=nstart;  
+	int nhigh=nend;  
+	while(nhigh&amp;gt;=nlow)                //只有当所有数都大于n时，条件不成立，返回1  
+	{  
+		mid=(nhigh+nlow)/2;  
+		if(pin[mid]&amp;lt;n &amp;amp;&amp;amp; ( mid+1&amp;gt;nend||pin[mid+1]&amp;gt;=n))  
+			return mid;                    //只要有小于n的元素就从这里返回  
+		else  
+			if( pin[mid]&amp;gt;=n)  
+				  nhigh=mid-1;  
+			else  
+				nlow=mid+1;  
+	}  
+	return 0;  
+}  
+  
+  
+int longestC(int* pin,int length)  
+{  
+	int minTail[length+1];  
+	minTail[1]=pin[0];  
+	int maxlengh=1;  
+	  
+	for(int i=1;i&amp;lt;length;i++)  
+	{  
+		int mylength=halfSearch(minTail,1,maxlengh,pin[i])+1;  
+		if(mylength&amp;gt;maxlengh)  
+		{  
+		   minTail[mylength]=pin[i];  
+		   maxlengh=mylength;  
+		}  
+		else  
+		{  
+			if(pin[i]&amp;lt;minTail[mylength])  
+				minTail[mylength]=pin[i];  
+		}  
+	}  
+	return maxlengh;  
+}  &lt;/code&gt;&lt;/pre&gt;</description>
+                <link>http://username.github.io/algorithm/2012/12/09/%E6%9C%80%E9%95%BF%E9%80%92%E5%A2%9E%E5%AD%90%E6%95%B0%E7%BB%84</link>
+                <guid>http://username.github.io/algorithm/2012/12/09/最长递增子数组</guid>
+                <pubDate>2012-12-09T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>cpp单态模式</title>
+                <description>&lt;p&gt;考虑到：&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;1.析构、构造函数、拷贝构造函数、赋值操作的私有。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;2.对象句柄的初始化和析构后的清0.&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;3.线程安全。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;&lt;em&gt;4.异常安全。&lt;/em&gt;&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;如果有网友发现还有改进的地方请指出。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#ifndef SINGLETON_H_  
+#define SINGLETON_H_  
+#include &amp;lt;pthread.h&amp;gt;  
+
+class lock      //资源管理类。  
+{  
+	private:  
+		pthread_mutex_t* p_mutex;  
+		lock(const lock&amp;amp; lk){}                    //资源不可以复制。  
+		lock&amp;amp; operator=(const lock&amp;amp; lk){}  
+	public :  
+		lock(pthread_mutex_t* mutex):p_mutex(mutex)  
+	{  
+		pthread_mutex_lock(p_mutex);  
+	}  
+		~lock()  
+		{  
+			pthread_mutex_unlock(p_mutex);  
+		}  
+
+};  
+
+class singleton  
+{  
+	private:  
+		static singleton* m_single;  
+		static pthread_mutext_t m_mutex;  
+		singleton(){}  
+		~singleton(){  
+			if(m_single)  
+			{  
+				lock mutex(m_mutex);  
+				if(m_single)  
+				{  
+					delete m_single;  
+					m_single=0;                  //注意清0.  
+				}  
+			}  
+		}  
+		singleton(const singleton&amp;amp; sin){}          //将拷贝构造和复制操作私有  
+		singleton&amp;amp; operator=(const singleton&amp;amp; sin){}  
+	public:  
+		static singleton* getSingleTon()  
+		{  
+			if(!m_single)  
+			{  
+				lock mutex(m_mutex);           //线程安全。  
+				if(!m_single)  
+					m_single=new s ingleton;  
+			}  
+			return m_single;  
+		}  
+		static void destroySingleTon()  
+		{  
+			~singleton();  
+		}  
+};  
+
+pthread_mutext_t singleton::m_mutex=PTHREAD_MUTEX_INITIALIZER;  
+singleton* singleton:: m_single=0;  
+#endif  &lt;/code&gt;&lt;/pre&gt;</description>
+                <link>http://username.github.io/algorithm/2012/12/09/cpp%E5%8D%95%E6%80%81%E6%A8%A1%E5%BC%8F</link>
+                <guid>http://username.github.io/algorithm/2012/12/09/cpp单态模式</guid>
+                <pubDate>2012-12-09T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>日程安排问题</title>
+                <description>&lt;h3 id=&quot;&quot;&gt;问题描述：&lt;/h3&gt;
+
+&lt;p&gt;设有n个活动的集合E={1,2,…,n}，其中每个活动都要求使用同一资源，如演讲会场等， 而在同一时间内只有一个活动能使用这一资源。 每个活动i都有一个要求使用该资源的起始时间si和一个结束时间fi,且&lt;code&gt;si&amp;lt;fi&lt;/code&gt; 。&lt;/p&gt;
+
+&lt;h5 id=&quot;1&quot;&gt;问题1，怎样安排选择的活动最多？&lt;/h5&gt;
+
+&lt;p&gt;解： 贪心算法。将活动按照结束时间从小到大排列。当前时间为start,从表格中选择第一个&lt;code&gt;Si&amp;gt;start&lt;/code&gt;的， 然后start=fi,再从向后比较。 算法复杂度o(n).&lt;/p&gt;
+
+&lt;p&gt;证明：start时间之后,按照贪心算法下一个应该选活动i。假设应该选择j而不是i, 设fi这后可安排的工作为n个，fj后可安排的活动数为m,显然&lt;code&gt;n&amp;gt;=m&lt;/code&gt;,如果选择i活动是错误的，选择j是正确的。 那么在start和sj之间必然有活动k插入。这与选择活动j作为下一个进行的活动是矛盾的。所以应通过贪心策略选择。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;cstdlib&amp;gt;  
+#include &amp;lt;iostream&amp;gt;  
+using namespace std;  
+typedef struct TASK  
+{  
+	int start;  
+	int end;  
+	int id;  
+}Task;  
+
+int cmpTask(const void* t1,const void* t2)  
+{  
+	return ((Task*)t1)-&amp;gt;end &amp;gt; ((Task*)t2)-&amp;gt;end;  
+}  
+void TaskPro(Task* ts,int length)  
+{  
+	qsort(ts,length,sizeof(Task),cmpTask);  
+	int time=0;  
+	for(int i=0;i&amp;lt;length;i++)  
+	{  
+		if(ts[i].start&amp;gt;=time)  
+		{  
+			cout&amp;lt;&amp;lt;ts[i].id&amp;lt;&amp;lt;&amp;quot;\t&amp;quot;;  
+			time=ts[i].end;  
+		}  
+	}  
+	cout&amp;lt;&amp;lt;endl;  
+}  
+
+int main()  
+{  
+	int s [] = {1,3,0,5,3,5,6,8,8,2,12};    
+	int f [] = {4,5,6,7,8,9,10,11,12,13,14};    
+	Task ts[11];  
+	for(int i=0;i&amp;lt;11;i++)  
+	{  
+		ts[i].start=s[i];  
+		ts[i].end=f[i];  
+		ts[i].id=i;  
+	}  
+	TaskPro(ts,11);  
+}  &lt;/code&gt;&lt;/pre&gt;</description>
+                <link>http://username.github.io/algorithm/2012/11/30/%E6%97%A5%E7%A8%8B%E5%AE%89%E6%8E%92%E9%97%AE%E9%A2%98</link>
+                <guid>http://username.github.io/algorithm/2012/11/30/日程安排问题</guid>
+                <pubDate>2012-11-30T15:36:55Z</pubDate>
+        </item>
+
+        <item>
+                <title>背包问题-组合问题-排列问题</title>
+                <description>&lt;h3 id=&quot;n&quot;&gt;问题：输出和为n的所有和式，不可有重复式。&lt;/h3&gt;
+
+&lt;p&gt;(此为完全背包问题，采用容易理解的回朔递归法。 同类的问题是：找零钱问题。) 此问题最先想到的是组合：1到n-1的数求组合，和为n的式子。 但是每个数字的个数可以多个，而且有限制，这就等同于完全背包了。&lt;/p&gt;
+
+&lt;h3 id=&quot;&quot;&gt;组合问题与背包问题的关系：&lt;/h3&gt;
+
+&lt;p&gt;1.无重复元素的集合的组合–01背包：在每个搜索点（每个元素）只考虑数字的有无。&lt;/p&gt;
+
+&lt;p&gt;2.有重复元素的集合组合—完全背包：在每个搜索点（每个元素）考虑数字的个数。&lt;/p&gt;
+
+&lt;h3 id=&quot;_2&quot;&gt;想到有重复数字排列的问题。&lt;/h3&gt;
+
+&lt;p&gt;问：求1231428的全排列。&lt;/p&gt;
+
+&lt;p&gt;以第一步为例：将1和后边的每一个数字交换，进入后边字串的排列问题中。但是不能与相同的数字交换。&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;#include &amp;lt;iostream&amp;gt;  
+#include &amp;lt;stdlib.h&amp;gt;  
+using namespace std;  
+
+//输入整数n，输出所有的何为n的和式。  
+void step(int index,int currentsum,int* result,int length,int sum)  
+{  
+	if(currentsum==0)  
+	{  
+		cout&amp;lt;&amp;lt;sum&amp;lt;&amp;lt;&amp;quot;=&amp;quot;;  
+		for(int i=0;i&amp;lt;length;i++)  
+		{  
+			if(result[i]&amp;gt;0)  
+				cout&amp;lt;&amp;lt;(i+1)&amp;lt;&amp;lt;&amp;quot;*&amp;quot;&amp;lt;&amp;lt;result[i]&amp;lt;&amp;lt;&amp;quot;+&amp;quot;;  
+		}  
+		cout&amp;lt;&amp;lt;endl;  
+		return;  
+	}  
+	if(index&amp;gt;=sum)  
+		return;  
+	int n=0;  
+	while((n*index)&amp;lt;=currentsum)  
+	{  
+		result[index-1]=n;  
+		step(index+1,currentsum-n*index,result,length,sum);  
+		result[index-1]=0;  
+		n++;  
+	}  
+}  
+void AllSum(int n)  
+{  
+	if(n&amp;lt;=1)  
+		exit(1);  
+	int* result=new int[n-1];  
+	step(1,n,result,n-1,n);  
+	delete[] result;  
+}  
+int main(){  
+	int n;  
+	cout&amp;lt;&amp;lt;&amp;quot;n=&amp;quot;&amp;lt;&amp;lt;endl;  
+	cin&amp;gt;&amp;gt;n;  
+	AllSum(n);  
+	return 0;  
+}  &lt;/code&gt;&lt;/pre&gt;</description>
+                <link>http://username.github.io/algorithm/2012/11/20/%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98and%E7%BB%84%E5%90%88%E9%97%AE%E9%A2%98and%E6%8E%92%E5%88%97%E9%97%AE%E9%A2%98</link>
+                <guid>http://username.github.io/algorithm/2012/11/20/背包问题and组合问题and排列问题</guid>
+                <pubDate>2012-11-20T15:36:55Z</pubDate>
+        </item>
+
+
+</channel>
+</rss>

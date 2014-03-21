@@ -1,0 +1,290 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>KMP字符串匹配算法</title>
+    
+    <meta name="author" content="Jay shaolianbo">
+
+    <!-- Enable responsive viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le styles -->
+    <link href="/assets/themes/twitter/bootstrap/css/bootstrap.2.2.2.min.css" rel="stylesheet">
+    <link href="/assets/themes/twitter/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- Le fav and touch icons -->
+  <!-- Update these with your own images
+    <link rel="shortcut icon" href="images/favicon.ico">
+    <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+  -->
+
+    <!-- atom & rss feed -->
+    <link href="/atom.xml" type="application/atom+xml" rel="alternate" title="Sitewide ATOM Feed">
+    <link href="/rss.xml" type="application/rss+xml" rel="alternate" title="Sitewide RSS Feed">
+
+  </head>
+
+  <body>
+    <div class="navbar">
+      <div class="navbar-inner">
+        <div class="container-narrow">
+          <a class="brand" href="/">Seven</a>
+          <ul class="nav">
+            
+            
+            
+
+
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+
+
+
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="container-narrow">
+
+      <div class="content">
+        
+<div class="page-header">
+  <h1>KMP字符串匹配算法 </h1>
+</div>
+
+<div class="row-fluid post-full">
+  <div class="span12">
+    <div class="date">
+      <span>30 December 2012</span>
+    </div>
+    <div class="content">
+      <p><strong><em>kmp核心思想：计算模式串的next数组，主串的索引在比较的过程中不回朔。</em></strong></p>
+
+<p>kmp.h</p>
+<div class='highlight'><pre><code class='cpp'><span class='cp'>#ifndef KMP_H_  </span>
+<span class='cp'>#define KMP_H_  </span>
+<span class='k'>class</span> <span class='nc'>Kmp</span>  
+<span class='p'>{</span>  
+	<span class='k'>private</span><span class='o'>:</span>  
+		<span class='kt'>void</span> <span class='n'>getNext</span><span class='p'>(</span><span class='kt'>char</span><span class='o'>*</span> <span class='n'>pstr</span><span class='p'>,</span><span class='kt'>int</span> <span class='n'>length</span><span class='p'>,</span><span class='kt'>int</span><span class='o'>*</span> <span class='n'>kmpnext</span><span class='p'>);</span>  
+	<span class='k'>public</span><span class='o'>:</span>  
+		<span class='kt'>int</span> <span class='n'>calcu</span><span class='p'>(</span><span class='kt'>char</span><span class='o'>*</span> <span class='n'>pmain</span><span class='p'>,</span><span class='kt'>char</span><span class='o'>*</span> <span class='n'>pchild</span><span class='p'>,</span><span class='kt'>int</span> <span class='n'>mainlength</span><span class='p'>,</span><span class='kt'>int</span> <span class='n'>childlength</span><span class='p'>);</span>  
+<span class='p'>};</span>  
+<span class='cp'>#endif </span>
+</code></pre></div>
+<p>kmp.cpp</p>
+<div class='highlight'><pre><code class='cpp'><span class='cp'>#include &quot;kmp.h&quot;  </span>
+<span class='cp'>#include &lt;stdio.h&gt;  </span>
+<span class='cp'>#include &lt;stdlib.h&gt;  </span>
+<span class='cp'>#include &lt;iostream&gt;  </span>
+<span class='k'>using</span> <span class='k'>namespace</span> <span class='n'>std</span><span class='p'>;</span>  
+<span class='kt'>int</span> <span class='n'>Kmp</span><span class='o'>::</span><span class='n'>calcu</span><span class='p'>(</span><span class='kt'>char</span><span class='o'>*</span> <span class='n'>pmain</span><span class='p'>,</span><span class='kt'>char</span><span class='o'>*</span> <span class='n'>pchild</span><span class='p'>,</span><span class='kt'>int</span> <span class='n'>mainlength</span><span class='p'>,</span><span class='kt'>int</span> <span class='n'>childlength</span><span class='p'>)</span>  
+	<span class='cm'>/* pmain----被比较串。 </span>
+<span class='cm'>	 * pchild-----待比较串 </span>
+<span class='cm'>	 * mainlength----pmain的长度 </span>
+<span class='cm'>	 * childlength-----pchild的长度 </span>
+<span class='cm'>	 */</span>  
+<span class='p'>{</span>  
+	<span class='kt'>int</span><span class='o'>*</span> <span class='n'>pnext</span><span class='o'>=</span><span class='k'>new</span> <span class='kt'>int</span><span class='p'>[</span><span class='n'>childlength</span><span class='p'>];</span>  
+	<span class='n'>getNext</span><span class='p'>(</span><span class='n'>pchild</span><span class='p'>,</span><span class='n'>childlength</span><span class='p'>,</span><span class='n'>pnext</span><span class='p'>);</span>           <span class='c1'>//获取pchild的next数组  </span>
+	<span class='kt'>int</span> <span class='n'>i</span><span class='o'>=</span><span class='mi'>0</span><span class='p'>;</span><span class='c1'>//for main   </span>
+	<span class='kt'>int</span> <span class='n'>j</span><span class='o'>=</span><span class='mi'>0</span><span class='p'>;</span><span class='c1'>//for child  </span>
+	<span class='k'>while</span><span class='p'>((</span><span class='n'>i</span><span class='o'>&lt;</span><span class='n'>mainlength</span><span class='p'>)</span> <span class='o'>&amp;&amp;</span> <span class='p'>(</span><span class='n'>j</span><span class='o'>&lt;</span><span class='n'>childlength</span><span class='p'>))</span>  
+	<span class='p'>{</span>  
+		<span class='k'>if</span><span class='p'>((</span><span class='n'>j</span><span class='o'>==-</span><span class='mi'>1</span><span class='p'>)</span> <span class='o'>||</span> <span class='p'>(</span><span class='n'>pmain</span><span class='p'>[</span><span class='n'>i</span><span class='p'>]</span><span class='o'>==</span><span class='n'>pchild</span><span class='p'>[</span><span class='n'>j</span><span class='p'>]))</span>    <span class='c1'>//next中的值为-1时，</span>
+												<span class='c1'>//表示在pmain的当前位置无匹配  </span>
+		<span class='p'>{</span>  
+			<span class='n'>i</span><span class='o'>++</span><span class='p'>;</span>  
+			<span class='n'>j</span><span class='o'>++</span><span class='p'>;</span>  
+		<span class='p'>}</span>  
+		<span class='k'>else</span>  
+			<span class='n'>j</span><span class='o'>=</span><span class='n'>pnext</span><span class='p'>[</span><span class='n'>j</span><span class='p'>];</span>  
+	<span class='p'>}</span>     
+	<span class='k'>delete</span><span class='p'>[]</span> <span class='n'>pnext</span><span class='p'>;</span>  
+	<span class='k'>if</span><span class='p'>(</span><span class='n'>j</span><span class='o'>&gt;=</span><span class='n'>childlength</span><span class='p'>)</span>  
+		<span class='k'>return</span> <span class='n'>i</span><span class='o'>-</span><span class='n'>childlength</span><span class='p'>;</span>  
+	<span class='k'>else</span>  
+		<span class='k'>return</span> <span class='o'>-</span><span class='mi'>1</span><span class='p'>;</span>  
+<span class='p'>}</span>  
+
+<span class='kt'>void</span> <span class='n'>Kmp</span><span class='o'>::</span><span class='n'>getNext</span><span class='p'>(</span><span class='kt'>char</span><span class='o'>*</span> <span class='n'>pstr</span><span class='p'>,</span><span class='kt'>int</span> <span class='n'>length</span><span class='p'>,</span><span class='kt'>int</span><span class='o'>*</span> <span class='n'>kmpnext</span><span class='p'>)</span>  
+	<span class='cm'>/*  pstr---------模式串 </span>
+<span class='cm'>	 *  length-----串长度 </span>
+<span class='cm'>	 *  kmpnext-----要输出的next数组，记录当模式串中对应位布匹配时，</span>
+<span class='cm'>	 *  主串当前位再和模式串的那一未比较 </span>
+<span class='cm'>	 *   </span>
+<span class='cm'>	 */</span>  
+<span class='p'>{</span>  
+	<span class='cm'>/*基本思路是：已知kmpnext[i]=j,如果kmp[i]=kmp[j]或kmp[i]=-1,则kmpnext[i+1]=j+1 </span>
+<span class='cm'>	 *  如果kmp[i]!=kmp[j],则进行一个自身的模式匹配，知道满足上述情况。 </span>
+<span class='cm'>	 */</span>  
+	<span class='n'>kmpnext</span><span class='p'>[</span><span class='mi'>0</span><span class='p'>]</span><span class='o'>=-</span><span class='mi'>1</span><span class='p'>;</span>  
+	<span class='kt'>int</span> <span class='n'>j</span><span class='o'>=-</span><span class='mi'>1</span><span class='p'>;</span>  <span class='c1'>// content of kmpnext   </span>
+	<span class='kt'>int</span> <span class='n'>i</span><span class='o'>=</span><span class='mi'>0</span><span class='p'>;</span>     <span class='c1'>//index of pstr  </span>
+	<span class='k'>while</span><span class='p'>(</span><span class='n'>i</span><span class='o'>&lt;</span><span class='p'>(</span><span class='n'>length</span><span class='o'>-</span><span class='mi'>1</span><span class='p'>))</span>        <span class='c1'>//因为是已知第i位的next值，求i+1位的值，所以i最大为length-2  </span>
+	<span class='p'>{</span>  
+		<span class='k'>if</span><span class='p'>((</span><span class='n'>j</span><span class='o'>==-</span><span class='mi'>1</span><span class='p'>)</span> <span class='o'>||</span> <span class='p'>(</span><span class='n'>pstr</span><span class='p'>[</span><span class='n'>j</span><span class='p'>]</span><span class='o'>==</span><span class='n'>pstr</span><span class='p'>[</span><span class='n'>i</span><span class='p'>]))</span>   <span class='c1'>//kmp myself  </span>
+		<span class='p'>{</span>  
+			<span class='n'>kmpnext</span><span class='p'>[</span><span class='o'>++</span><span class='n'>i</span><span class='p'>]</span><span class='o'>=++</span><span class='n'>j</span><span class='p'>;</span>  
+		<span class='p'>}</span>  
+		<span class='k'>else</span>  
+			<span class='n'>j</span><span class='o'>=</span><span class='n'>kmpnext</span><span class='p'>[</span><span class='n'>j</span><span class='p'>];</span>      
+	<span class='p'>}</span>  
+<span class='p'>}</span>  
+</code></pre></div>
+<h3 id="">应用举例：</h3>
+
+<blockquote>
+<h4 id="1">1.求两个字串的最大公共子串：</h4>
+
+<p>eg:s1=123abcd456 和s2=456abcd123 按s2后缀串由短到长，分别求每个后缀串与s1匹配时的最大匹配长度。最长匹配的那部分就是最大公共字串。</p>
+
+<h4 id="2s123abccba34">2.进一步扩展就是求s=123abccba34的最长回文。</h4>
+
+<p>此问题等价于：s1=123abccba34 s2=34abccba321的最大公共子串。</p>
+</blockquote>
+    </div>
+
+  
+    <ul class="tag_box inline">
+      <li><i class="icon-folder-open"></i></li>
+      
+      
+
+
+  
+     
+    	<li><a href="/categories.html#algorithm-ref">
+    		algorithm <span>9</span>
+    	</a></li>
+    
+  
+
+
+    </ul>
+    
+
+  
+    <ul class="tag_box inline">
+      <li><i class="icon-tags"></i></li>
+      
+      
+
+
+  
+     
+    	<li><a href="/tags.html#algorithm-ref">algorithm <span>8</span></a></li>
+     
+    	<li><a href="/tags.html#kmp-ref">kmp <span>1</span></a></li>
+    
+  
+
+
+
+    </ul>
+    
+
+    <hr>
+    <div class="pagination">
+      <ul>
+      
+        <li class="prev"><a href="/algorithm/2012/12/10/%E6%B1%82%E6%95%B0%E7%BB%84%E5%89%8Dk%E5%B0%8F%E7%9A%84%E5%85%83%E7%B4%A0%E5%8F%8A%E5%85%B6%E5%BA%94%E7%94%A8" title="求数组的前k小的元素，及其应用">&larr; Previous</a></li>
+      
+        <li><a href="/archive.html">Archive</a></li>
+      
+        <li class="next"><a href="/algorithm/2012/12/30/%E6%9C%80%E9%95%BF%E5%9B%9E%E6%96%87%E7%AE%97%E6%B3%95" title="最长回文算法">Next &rarr;</a></li>
+      
+      </ul>
+    </div>
+    <hr>
+    <!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread"></div>
+<script type="text/javascript">
+var duoshuoQuery = {short_name:"shaolianbo"};
+(function() {
+ var ds = document.createElement('script');
+ ds.type = 'text/javascript';ds.async = true;
+ ds.src = 'http://static.duoshuo.com/embed.js';
+ ds.charset = 'UTF-8';
+ (document.getElementsByTagName('head')[0] 
+  || document.getElementsByTagName('body')[0]).appendChild(ds);
+ })();
+</script>
+<!-- Duoshuo Comment END -->
+
+  </div>
+</div>
+
+
+      </div>
+      <hr>
+      <footer>
+        <p>&copy; 2014 Jay shaolianbo
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://twitter.github.com/bootstrap/" target="_blank">Twitter Bootstrap</a>
+        </p>
+      </footer>
+
+    </div>
+
+    
+  </body>
+</html>
+

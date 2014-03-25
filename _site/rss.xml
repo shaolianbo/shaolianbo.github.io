@@ -5,10 +5,64 @@
         <description>Seven - Jay shaolianbo</description>
         <link>http://username.github.io</link>
         <link>http://username.github.io</link>
-        <lastBuildDate>2014-03-20T18:59:37+08:00</lastBuildDate>
-        <pubDate>2014-03-20T18:59:37+08:00</pubDate>
+        <lastBuildDate>2014-03-26T00:03:04+08:00</lastBuildDate>
+        <pubDate>2014-03-26T00:03:04+08:00</pubDate>
         <ttl>1800</ttl>
 
+
+        <item>
+                <title>https知识总结</title>
+                <description>&lt;h4 id=&quot;&quot;&gt;一、加密原理&lt;/h4&gt;
+
+&lt;h5 id=&quot;1&quot;&gt;1.对称加密&lt;/h5&gt;
+
+&lt;p&gt;加密方和解密方用同一个密钥，加密和解密。&lt;/p&gt;
+
+&lt;p&gt;优点： 算法简单，效率高&lt;/p&gt;
+
+&lt;p&gt;缺点： 在web上需要首先沟通密钥，如果中间密钥被劫持，则数据被窃取。 如果服务器和不同的客户端使用不同的密钥，则密钥的管理比较麻烦。&lt;/p&gt;
+
+&lt;h5 id=&quot;2&quot;&gt;2.非对称加密&lt;/h5&gt;
+
+&lt;p&gt;服务器有公钥和私钥,客户端可以获取服务器的公钥，将数据加密后，传回服务器端，服务器使用 私钥解密。&lt;/p&gt;
+
+&lt;p&gt;优点： 不用对大量密钥进行管理。算法比较复杂。&lt;/p&gt;
+
+&lt;p&gt;缺点： 计算效率低。黑客可以假冒服务器端，劫持客户端的链接请求，并使用自己的公钥，与被 劫持的客户端进行“安全通信”。&lt;/p&gt;
+
+&lt;h4 id=&quot;https&quot;&gt;二、https&lt;/h4&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/pic/https_struct.png&quot; alt=&quot;alt text&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;https相当于运行在ssl上的http协议。加解密的工作在ssl上完成。&lt;/p&gt;
+
+&lt;p&gt;ssl的原理是：通过第三发（或者服务器自身）颁发的证书来验证公钥的真实性，然后通过非对称加密的方式进行通信， 确定一个双方都认可的密钥，解析来使用这个密钥进行对称加密，实现安全传输。&lt;/p&gt;
+
+&lt;p&gt;ssl层的建立过程：&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;1.客户端与服务器端建立tcp链接。&lt;/p&gt;
+
+&lt;p&gt;2.客户端向服务器端发送可选的加密算法。 服务器端返回确定的算法。（比如确定使用何种对称加密算法）&lt;/p&gt;
+
+&lt;p&gt;3.客户端请求证书。&lt;/p&gt;
+
+&lt;p&gt;4.客户端验证证书的正确性。并获得服务器公钥。&lt;/p&gt;
+
+&lt;p&gt;5.客户端使用公钥将用于对称加密的密钥进行加密，然后返回给服务器。&lt;/p&gt;
+
+&lt;p&gt;6.服务器的到数据后，使用自己的私钥解密，从何获得了密钥。&lt;/p&gt;
+
+&lt;p&gt;7.使用密钥进行通信。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;特点： 即有对称加密的安全性，而且兼顾了效率。&lt;/p&gt;
+
+&lt;p&gt;相关链接：&lt;a href=&quot;http://www.cnblogs.com/P_Chou/archive/2010/12/27/https-ssl-certification.html&quot; title=&quot;https详解&quot;&gt;来自cnblog的一篇博文&lt;/a&gt;&lt;/p&gt;</description>
+                <link>http://username.github.io/web/https/protocol/2014/03/25/https</link>
+                <guid>http://username.github.io/web/https/protocol/2014/03/25/https</guid>
+                <pubDate>2014-03-25T17:55:00Z</pubDate>
+        </item>
 
         <item>
                 <title>字节对齐与sizeof</title>

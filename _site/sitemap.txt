@@ -8,6 +8,7 @@ http://username.github.io/sitemap.txt
 http://username.github.io/pages.html
 http://username.github.io/atom.xml
 
+http://username.github.io/web/https/protocol/2014/03/25/https
 http://username.github.io/c/2014/03/19/%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8Csizeof
 http://username.github.io/algorithm/2014/03/19/%E7%B4%A0%E6%95%B0%E6%A0%87%E8%AE%B0%E6%B3%95%E6%B1%82n%E4%BB%A5%E5%86%85%E7%9A%84%E7%B4%A0%E6%95%B0
 http://username.github.io/algorithm/2014/02/02/%E6%AC%A7%E5%87%A0%E9%87%8C%E5%BE%B7%E6%B3%95%E6%B1%82%E6%9C%80%E5%A4%A7%E5%85%AC%E7%BA%A6%E6%95%B0

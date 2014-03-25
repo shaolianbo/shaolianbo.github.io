@@ -5,7 +5,6 @@ date:   2014-01-30 15:36:55
 categories: algorithm  
 tag: ["algorithm","trie树"，"模式匹配"]
 ---
-
 	class Trie:
 		"""用来存储关键词和进行多模匹配  """
 			def __init__(self):

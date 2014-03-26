@@ -51,4 +51,70 @@ ssl层的建立过程：
 相关链接：[来自cnblog的一篇博文][1]
 [1]:http://www.cnblogs.com/P_Chou/archive/2010/12/27/https-ssl-certification.html "https详解"
 
+####三、模拟
+因为第三方的签名是需要费用的，所以可以自己模拟授权机构。使用openssl模拟授权，生成密钥。
+
+首先，模拟第三方授权机构。生成自己的密钥，然后使用该密钥给自己签名，生成根证书。客户端，如果想验证
+服务器端的证书，必须获得该根证书，否则肯定验证失败。
+
+	$ openssl genrsa -out ca.key 1024
+	$ openssl req -new -key ca.key -out ca.csr
+	$ openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
+	
+然后，生成服务器端的密钥，并通过“第三法机构”获取证书。
+
+	$ openssl genrsa -out server.key 1024
+	$ openssl rsa -in client.key -pubout -out client.pem	
+	$ openssl req -new -key server.key -out server.csr
+	$ openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -in server.csr -out server.crt
+
+注意，在第三步生成授权请求文件ca.csr时，要指定server名。否则授权文件无效。比如，此处指定为"localhost",因为
+客户端需要这个字段来验证服务器的真实行。
+
+服务器端代码：
+
+	var https = require("https");
+	var fs=require("fs");
+
+	var options={
+		    key: fs.readFileSync("./server.key"),
+			cert: fs.readFileSync("./server.crt")
+	};
+
+	https.createServer(options,function(req,res){
+		    res.writeHead(200);
+			res.end("hellow world");
+	}).listen(8000); 
+
+运行上述代码。
+
+执行`curl https://localhost:8000/`,提示证书验证失败。
+
+执行`curl --cacert ca.crt https://localhost:8000/`,得到正确回复。
+
+执行`curl --cacert ca.crt https://[ip]:8000`, 提示 'localhost'不匹配ip。
+
+顺便给出使用nodejs写的客户端：
+
+	var https = require("https");                                                                                                            
+	var fs = require("fs");
+
+	var options={
+	hostname:"localhost",
+			 port:8000,
+			 path:"/",
+			 method:"GET",
+			 ca:[fs.readFileSync("./ca.crt")]
+	};  
+
+	var req =https.request(options,function(res){
+			res.on("data",function(d){
+				console.log(d.toString())
+				});
+			});
+
+	req.end();
+	req.on("error",function(e){
+			console.log(e)
+			});
 

@@ -1,0 +1,32 @@
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Introduce</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				This is me
+			</td>
+		</tr>
+	</tbody>
+</table>
+<table class="table table-bordered">
+	<thead>
+		<tr>
+			<th>Tags</th>
+		</tr>
+	</thead>
+	<tbody>
+		<tr>
+			<td>
+				<ul>
+					{% assign tags_list = site.tags | limitHashCount:20 %}
+					 {% include JB/tags_list %}
+					 <a href="{{ BASE_PATH }}{{ site.JB.tags_path }}"><u>...更多标签...</u></a>
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>

@@ -7,7 +7,9 @@
 	<tbody>
 		<tr>
 			<td>
-				<a href="http://r.qq.com/cgi-bin/reader_switch?u={{ BASE_PATH }}">
+				<strong>	建议大家使用rss访问阅读。 </strong>
+				<br> 
+				<a href="http://r.qq.com/cgi-bin/reader_switch?u={{ site.domain }}" target="_blank">
 					<img src="http://res.mail.qq.com/zh_CN/htmledition/images/rss/icon_sub01.gif"/>
 				</a>
 			</td>
@@ -26,7 +28,7 @@
 				<ul>
 					{% assign tags_list = site.tags | limitHashCount:20 %}
 					 {% include JB/tags_list %}
-					 <a href="{{ BASE_PATH }}{{ site.JB.tags_path }}"><u>...更多标签...</u></a>
+					 <a href="{{ BASE_PATH }}{{ site.JB.tags_path }}"><u><strong><em>...更多标签...</em></strong></u></a>
 				</ul>
 			</td>
 		</tr>

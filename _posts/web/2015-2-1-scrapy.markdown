@@ -1,0 +1,307 @@
+---
+layout: post
+title:  "scrapy 实践分享"
+date:   2015-2-1 17:55:00
+categories:  ["web","scrapy"]
+---
+
+###Scrapy 的几个特点
+
+１．爬虫的结构大致相同．Scrapy 提供爬虫需要的所有组件：
+
+![enter image description here](http://doc.scrapy.org/en/0.24/_images/scrapy_architecture.png)
+
+* scrapy Engine: 负责抓取流程
+* Scheduler:  请求队列
+* Downloader:  下载器
+* Spider:  从网页中提取信息或产生新的抓取请求
+* Item Pipeline:  Item是抓取信息的容器，　Item Pipeline 用来对提取的数据（Item）进行处理，比如：过滤＼持久话.
+
+只要关注'Spider' 'Item Pipline' , 就能完成一个简单的爬虫
+
+２．	采用Twisted, 异步非阻塞，更容易处理并发请求．调试和调用不方便．怎样控制下载顺序？　怎样在非Twisted环境下调用Scrapy?
+
+３．丰富的中间件，　爬虫的优化更方便．
+
+> CookiesMiddleware
+> HttpProxyMiddleware　
+> RedirectMiddleware  重定向，默认会自动抓取重定向的内容
+> RetryMiddleware　
+
+另外，用户可以添加中间件，影响抓取行为，或者收集爬虫信息．
+
+### Scrapy 与Django 结合
+
+Scrapy使用Django的Model做持久化．Django可以提供接口，调用Scrapy.
+[apphub项目结构](http://git.m.sohuno.com/lianboshao/apphub/tree/master)
+
+１．在Scrapy中使用Django
+
+    # init Django
+    import os
+
+    import django
+
+    profile = os.environ.setdefault("APPHUB_PROFILE", "dev")
+    os.environ['DJANGO_SETTINGS_MODULE'] = 'apphub.settings.%s' % profile
+
+    django.setup()
+
+* 关于DjangoItem
+
+		from django.db import models
+		class Person(models.Model):
+		    name = models.CharField(max_length=255)
+		    age = models.IntegerField()
+．．．．．
+
+		from scrapy.contrib.djangoitem import DjangoItem
+		class PersonItem(DjangoItem):
+		    django_model = Person
+．．．．．．
+ >p = PersonItem()
+> p['name'] = 'John'
+> p['age'] = '22'
+> p.save()
+
+只是将Django　Model的字段名作为了Item的Field, 只能做纯数值的赋值，和model.save().  不能处理model之间的relation.　Model加个外键就不能用了．([DjangoItem的源码](https://github.com/scrapy/scrapy/blob/master/scrapy/contrib/djangoitem.py))
+
+对于具有model关系的模型：
+与model类型解耦合的pipline(代码来自秋实):
+
+    # -*- coding: utf-8 -*-
+	from __future__ import unicode_literals
+
+	from scrapy import log
+
+
+	class SavePipeline(object):
+    # TODO: Rename to StorePipeline
+	    def process_item(self, item, spider):
+	        model = item.django_model
+	        many_to_many_fields = [f.name for f in model._meta.many_to_many]
+
+	        # Update model instance without ManyToMany Fields
+	        instance, _ = model.objects.get_or_create(**{
+	            field: item.get(field)
+	            for field in item.unique_fields
+	        })
+	        fields = dict(item.copy())
+	        for field in many_to_many_fields:
+	            if field in fields:
+	                fields.pop(field)
+	        model.objects.filter(id=instance.id).update(**fields)
+
+	        # Create ManyToMany relationship instance
+	        for field in many_to_many_fields:
+	            if not item.get(field):
+	                continue
+	            many_to_many_objs = getattr(instance, field)
+	            old_set = set(many_to_many_objs.all())
+	            new_set = set([
+		            model._meta.get_field(field).rel.to.objects.get_or_create(**value)[0]
+                for value in item[field]
+	            ])
+	            for obj in new_set - old_set:
+	                many_to_many_objs.add(obj)
+	            for obj in old_set - new_set:
+	                many_to_many_objs.remove(obj)
+它可以处理一个model 与其他　model之间的m2m关系．
+
+２．在Django中使用Scrapy. 需要在子进程中运行Scrapy
+
+###apphub 项目简介
+
+1.　在多个app分发站点，　抓取app信息
+2.　 提供接口调用爬虫和查询数据
+
+###  减少重复工作
+
+网站的爬虫，爬虫运行逻辑一致，　要抓的数据一致，　只有数据的抽取方法不同．
+
+**１． 爬虫的运行的逻辑抽象出来**
+
+**２．对抓取到的原始数据进行格式化预处理**
+
+Item类似Django的Model，但对各个字段默认没有约束．
+引文：
+
+
+> There is no restriction on the values accepted by Field objects.  
+> ...
+ Typically, those components whose behaviour depends on each field use certain field keys to configure that behaviour.
+...
+ It’s important to note that the Field objects used to declare the item do not stay assigned as class attributes. Instead, they can be accessed through the Item.fields attribute.
+
+一个简单的Item
+
+    import scrapy
+
+	class Product(scrapy.Item):
+	    name = scrapy.Field()
+	    price = scrapy.Field()
+	    stock = scrapy.Field()
+	    last_updated = scrapy.Field(serializer=str)
+
+> In [６]: p = Product()
+>
+> In [7]: p.fields
+>
+>Out[7]: {'last_updated': {'serializer': str}, 'name': {}, 'price': {}, 'stock': {}}
+>
+>In [8]: p._values
+>
+>Out[8]: {}
+
+>In [10]: p._values
+>
+>In [11]: 'name' in p
+
+>Out[12]: False
+
+*２.1 给可能抓不到的数据提供默认值．*
+
+可提供默认值的Item类：
+
+     class DefaultsItem(Item):
+        """ Item with default values """
+        def __getitem__(self, key):
+            try:
+                return self._values[key]
+            except KeyError:
+                field = self.fields[key]
+                if 'default' in field:
+                    return field['default']
+                raise
+
+        def is_valid(self):
+            for name, field in self.fields.items():
+                if name not in self._values:
+                    if 'default' not in field:
+                        raise LackForFieldError(self, name)
+            return True
+
+> In [13]: from app_spider.items import DefaultsItem
+>
+> In [14]: class Product(DefaultsItem):
+>   ...: price = scrapy.Field(default=12)
+>     ....:     
+>
+> In [15]: p2 = Product()
+>
+> In [16]: 'price' in p2 Out[16]: True
+>
+> In [17]: p2['price']
+>
+> Out[17]: 12
+
+*2.2 在Item Loader中格式化数据*
+
+引文：
+
+>   In other words, Items provide the container of scraped data, while
+> Item Loaders provide the mechanism for populating that container.
+
+赋值时：
+
+>    field_raw_datas =>  field_in_process => field_raw_data_collection
+
+loader.load_item()：
+>  field_raw_data_collection => field_out_process => item filed value
+
+实例:
+
+    def image_field_in_processor(url):
+	    return {'url': url, 'path': ''}
+
+    class AppInfoItemLoader(ItemLoader):
+	    default_item_class = AppInfoItem
+
+	    default_output_processor = TakeFirst()
+	    default_input_processor = MapCompose(unicode.strip)
+
+	    logo_in = MapCompose(image_field_in_processor)
+
+	    screenshots_in = MapCompose(image_field_in_processor)
+	    screenshots_out = Identity()
+
+	    intro_out = Join('<br>')
+
+	    tags_out = Identity()
+
+	    permissions_str_out = Join(';')
+
+	    permissions_out = Identity()
+
+	    instance_in = Identity()
+
+### 在Django中调用爬虫
+
+问题：接口中如何调用爬虫?
+
+Scrapy 运行在Twisted上．Twisted会开启新的事件监听.Twisted必须运行在主线程上.
+不论使用何种服务器机制，要想在api中成功调用Scrapy, 最保险的方法就是在子进程(multiprocessing.Process)中使用scrapy.  子进程通过multiprocessing.Queue 把爬虫的运行结果返回给调用者． 关键类：scrapy.crawler.Crawler ,  通过它可以配置＼启动爬虫，它包含所有scrapy组件．
+
+问题：如何在程序层面获得爬虫的运行结果？
+
+* 方法１，把结果直接附着到crawler上．
+在shell 中抓取网页http://www.wandoujia.com/apps/com.lcwx.zjkb1，会得到如下日志输出：
+
+> 2014-10-31 03:40:59+0000 [wandoujia_detail] INFO: Closing spider
+> (finished) 2014-10-31 03:40:59+0000 [wandoujia_detail] INFO: Dumping
+> Scrapy stats: 	{
+> 'downloader/request_bytes': 256, 	
+> 'downloader/request_count': 1, 	
+> 'downloader/request_method_count/GET': 1, 	
+>'downloader/response_count': 1,
+> 	 'downloader/response_status_count/200': 1, 	 'finish_reason':
+> 'finished', 	 'finish_time': datetime.datetime(2014, 10, 31, 3, 40,59, 259251), 	 >'item_scraped_count': 1, 	 
+> 'log_count/DEBUG': 4, 	
+> 'log_count/INFO': 8, 	
+> 'response_received_count': 1, 	
+>  'scheduler/dequeued': 1, 	
+> 'scheduler/enqueued': 1, 	
+> 'scheduler/enqueued/memory': 1, 	 
+> 'start_time':datetime.datetime(2014, 10, 31, 3, 40, 58, 278126)}
+> 2014-10-31 03:40:59+0000 [wandoujia_detail] INFO: Spider closed (finished)
+
+这些信息都是由scrapy.statscol.MemoryStatsCollector, 进行收集的，可以通过crawler.stats访问到．　可以在适当的地方（如pipline中完成持久化后），在crawler.stats中添加需要的信息(比如　item 入库后的主键)．最后把crawler.stats作为结果返回．　[status collection 官方文档](http://doc.scrapy.org/en/0.24/topics/stats.html)
+
+这种方法可以收集全面的爬虫信息．但是crawler应该是信息的产生者，不应该负责信息的保存．比如，当用同样的爬虫做持续抓取时，我们附加给crawler的数据会越来越多，占用内存，但实际上持续抓取又不需要这些信息．
+
+* 方法２：在需要收集信息处，发送信号．如果调用者需要这些信息，就接受信号．
+
+[Scrapy Signal 官方文档](http://doc.scrapy.org/en/0.24/topics/signals.html)
+
+信号定义：
+
+    crawl_success = object()
+
+信号发送：
+
+    self.crawler.signals.send_catch_log(crawl_success, spider=spider, apk_name=app.app_id.apk_name, reason='版本已最新,不需要更新')
+
+信号监听：
+
+    crawler.signals.connect(self.on_crawl_success, signal=crawl_success)
+
+信号的管理由crawler.signals负责．
+
+在pipeline中如何访问到crawler?
+
+Scrapy的pipeline\Middleware\extension 都有一个静态方法，crawler通过此方法，生成pipline\Middleware\extension的实例．
+
+    @classmethod
+    def from_crawler(cls, crawler):
+	    return cls(...)
+
+可以通过此方法，把crawler传给pipeline
+
+    class FilterPipeline(object):
+
+	    def __init__(self, crawler):
+	        self.crawler = crawler
+
+	    @classmethod
+	    def from_crawler(cls, crawler):
+	        return cls(crawler)

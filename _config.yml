@@ -132,3 +132,5 @@ JB :
 gem: [Jekyll-MyFilter]
 
 domain: "shaolianbo.github.io"
+
+markdown: kramdown

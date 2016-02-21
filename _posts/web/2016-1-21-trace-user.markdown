@@ -1,6 +1,6 @@
 ---
 layout: "post"
-title: "使用ETags跟踪用户"
+title: "使用ETag跟踪用户"
 date: "2016-1-21 18:05"
 categories:  ["web", "nginx"]
 ---

@@ -1,11 +1,11 @@
 ---
 layout: post
-title:  "torando 源码分析（一）"
+title:  "Tornado 源码分析（一）"
 date:   2015-3-1 17:55:00
 categories:  ["web","tornado"]
 ---
 
-torndo.gen.engine 是 tornao v3.0.0之前用于异步方法的。 具体点说如果一个方法内部如果使用yield 方法返回一个异步调用的结果， 那么这个方法必须使用tornado.gen.engine装饰。 tornado v3.0.0之后被tornado.gen.coroutines取代。
+tornado.gen.engine 是 tornao v3.0.0之前用于异步方法的。 具体点说如果一个方法内部如果使用yield 方法返回一个异步调用的结果， 那么这个方法必须使用tornado.gen.engine装饰。 tornado v3.0.0之后被tornado.gen.coroutines取代。
 
 如果没有engine, 异步也是可行的，只不过需要大量callback, 就行Javascript那样。
 一个最经典的异步handler如下：
@@ -195,3 +195,7 @@ Runner.run 方法也就很好理解了
                     self.exc_info = (BadYieldError("yielded unknown object %r" % yielded),)
         finally:
             self.running = False
+
+
+
+原文出处： [http://shaolianbo.github.io/web/tornado/2015/03/01/tornado1](http://shaolianbo.github.io/web/tornado/2015/03/01/tornado1)

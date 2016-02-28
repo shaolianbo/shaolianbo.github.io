@@ -3,6 +3,7 @@ layout: post
 title:  "scrapy 实践分享"
 date:   2015-2-1 17:55:00
 categories:  ["web","scrapy"]
+tag:  ["web","scrapy"]
 ---
 
 ###Scrapy 的几个特点

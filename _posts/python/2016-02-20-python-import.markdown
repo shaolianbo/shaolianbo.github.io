@@ -3,6 +3,7 @@ layout: "post"
 title: "python非侵入式代码监控(一): python import hook"
 date: "2016-02-20 17:18"
 categories: ['python']
+tag: ["python"]
 ---
 
 [Tornado_debug](https://github.com/shaolianbo/tornado_debug)是我写的一个非侵入式Tornado性能监控项目。 计划用两篇blog总结其核心技术。 这是第一篇，总结python模块钩子的原理与python环境自定义出事化的方法。另一篇用来介绍tornado_debug本身的架构。

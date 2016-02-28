@@ -2,7 +2,8 @@
 layout: post
 title:  "速度优化-后端机器分组"
 date:   2016-1-20 17:55:00
-categories:  ["web","tornado", "速度优化"]
+categories:  ["web","tornado"]
+tags:  ["web","tornado", "速度优化"]
 ---
 
 上周对网站的后端架构做了一次优化，方法就是根据url, 给后端机器分组，

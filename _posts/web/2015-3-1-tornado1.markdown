@@ -3,6 +3,7 @@ layout: post
 title:  "Tornado 源码分析（一）"
 date:   2015-3-1 17:55:00
 categories:  ["web","tornado"]
+tag:  ["web","tornado"]
 ---
 
 tornado.gen.engine 是 tornado v3.0.0之前用于异步方法的。 具体点说如果一个方法内部使用yield 方法返回一个异步调用的结果， 那么这个方法必须使用tornado.gen.engine装饰。 tornado v3.0.0之后被tornado.gen.coroutines取代。

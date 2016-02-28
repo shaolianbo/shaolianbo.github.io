@@ -2,7 +2,8 @@
 layout: "post"
 title: "HTTP缓存 1.0 vs 1.1"
 date: "2016-1-22 18:05"
-categories:  ["web", "http"]
+categories:  ["web"]
+tag:  ["web", "http"]
 ---
 
 在“[使用ETag跟踪用户](/web/nginx/2016/01/21/trace-user)”中有一点被忽略了，因为要用这张小图统计统计uv, 所以要求浏览器必须每次都要发送这个图片的请求。这需要服务器对图片的缓存策略做设置。

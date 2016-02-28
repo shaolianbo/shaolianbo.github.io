@@ -2,7 +2,8 @@
 layout: post
 title:  "https知识总结"
 date:   2014-03-25 17:55:00
-categories:  ["web","https","protocol"]
+tag:  ["web","https","protocol"]
+categories: ['web', 'https']
 ---
 
 ####一、加密原理
@@ -60,11 +61,11 @@ ssl层的建立过程：
 	$ openssl genrsa -out ca.key 1024
 	$ openssl req -new -key ca.key -out ca.csr
 	$ openssl x509 -req -in ca.csr -signkey ca.key -out ca.crt
-	
+
 然后，生成服务器端的密钥，并通过“第三法机构”获取证书。
 
 	$ openssl genrsa -out server.key 1024
-	$ openssl rsa -in server.key -pubout -out server.pem	
+	$ openssl rsa -in server.key -pubout -out server.pem
 	$ openssl req -new -key server.key -out server.csr
 	$ openssl x509 -req -CA ca.crt -CAkey ca.key -CAcreateserial -in server.csr -out server.crt
 
@@ -84,7 +85,7 @@ ssl层的建立过程：
 	https.createServer(options,function(req,res){
 		    res.writeHead(200);
 			res.end("hellow world");
-	}).listen(8000); 
+	}).listen(8000);
 
 运行上述代码。
 
@@ -117,4 +118,3 @@ ssl层的建立过程：
 	req.on("error",function(e){
 			console.log(e)
 			});
-

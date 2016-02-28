@@ -2,7 +2,8 @@
 layout: post
 title:  "字节对齐与sizeof"
 date:   2014-03-19 17:55:00
-categories: c
+categories: 'c'
+tag: ['c']
 ---
 
 ###一、siezeof

@@ -6,7 +6,7 @@ categories: ['python']
 tag: ["python"]
 ---
 
-[Tornado_debug](https://github.com/shaolianbo/tornado_debug)是我写的一个非侵入式Tornado性能监控项目。 计划用两篇blog总结其核心技术。 这是第一篇，总结python模块钩子的原理与python环境自定义出事化的方法。另一篇用来介绍tornado_debug本身的架构。
+[Tornado_debug](https://github.com/shaolianbo/tornado_debug)是我写的一个非侵入式Tornado性能监控项目。 计划用两篇blog总结其核心技术。 这是第一篇，总结python模块钩子的原理与python环境自定义初始化的方法。另一篇用来介绍tornado_debug本身的架构。
 
 tornado_debug首先要解决的问题是，开发一个agent, 使用agent启动python程序，并能对python程序中导入的模块自动添加装饰器，用来统计性能数据。
 
